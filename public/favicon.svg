@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
+  <!-- Placeholder favicon: brand colours only. Replace with the real mark when supplied. -->
+  <rect width="48" height="48" rx="8" fill="#12283d"/>
+  <rect x="6" y="6" width="36" height="36" rx="5" fill="#c8102e"/>
+  <text x="24" y="33" font-family="Georgia, 'Source Serif 4', serif" font-size="22" font-weight="700" fill="#fff" text-anchor="middle">中</text>
+</svg>
