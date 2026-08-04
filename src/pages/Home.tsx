@@ -2,7 +2,8 @@ import { useNavigate } from "react-router-dom";
 import { usePageMeta } from "../lib/meta";
 import { badgeBg, scholarships } from "../data/scholarships";
 import { procSteps } from "../data/content";
-import heroImg from "../assets/hero.jpg";
+import { photos, photoBlurs } from "../data/photos";
+import HeroBackdrop from "../components/HeroBackdrop";
 
 export default function Home() {
 	const navigate = useNavigate();
@@ -17,14 +18,13 @@ export default function Home() {
 		<div>
 			{/* Hero */}
 			<section className="hero">
-				<div
-					className="hero-bg"
-					style={{
-						background: `linear-gradient(90deg, rgba(11,22,35,.92) 0%, rgba(11,22,35,.72) 42%, rgba(11,22,35,.32) 70%), url(${heroImg})`,
-						backgroundSize: "cover",
-						backgroundPosition: "center right",
-					}}
-				>
+				<div className="hero-bg">
+					<HeroBackdrop
+						src={photos.home}
+						blur={photoBlurs.home}
+						position="center right"
+					/>
+					<div className="hero-gradient" />
 					<div className="hero-slash" />
 					<div className="hero-inner">
 						<div className="hero-copy">
@@ -141,8 +141,8 @@ export default function Home() {
 				<div className="cta-inner">
 					<h2 className="cta-title">Ready to study in China?</h2>
 					<p className="cta-p">
-						Applications for the 2026 intake are open. Spots are limited —
-						submit your details today.
+						Applications for the 2026 intake are open. Spots are limited.
+						Submit your details today.
 					</p>
 					<button className="btn-cta-red" onClick={() => navigate("/apply")}>
 						Begin Your Application

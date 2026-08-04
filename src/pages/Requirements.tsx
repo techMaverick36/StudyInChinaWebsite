@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { usePageMeta } from '../lib/meta'
 import PageHero from '../components/PageHero'
-import { photos } from '../data/photos'
+import { photos, photoBlurs } from '../data/photos'
 import { documents } from '../data/content'
 
 export default function Requirements() {
@@ -19,6 +19,7 @@ export default function Requirements() {
         lede="Everything you need to send, and where to get it."
         photoNote="student preparing documents"
         photo={photos.requirements}
+        blur={photoBlurs.requirements}
       />
       <div className="container-860 body-pad">
         <p className="req-intro">

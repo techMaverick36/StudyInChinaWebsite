@@ -2,13 +2,15 @@
    Body paragraphs are the production copy. Items marked [PLACEHOLDER …] are
    awaiting real content from the client. */
 
+/* The single source for contact details. Every page, form message and error
+   notice reads from here, so these never disagree with each other. */
 export const contact = {
-  /* [PLACEHOLDER] Confirm real phone number, email and WhatsApp link. */
   phone: '+256 701 458000',
+  /* [PLACEHOLDER] Confirm the email address is live before launch. */
   email: 'admissions@studyinchinanow.com',
   whatsappUrl: 'https://wa.me/256701458000',
-  addressLines: ['Universal House, Shop G14', 'Luwum Street', 'Kampala Uganda'],
-  hours: 'Monday – Friday, 9:00 – 17:00',
+  addressLines: ['Universal House, Shop G14', 'Luwum Street', 'Kampala, Uganda'],
+  hours: 'Monday to Friday, 9:00 to 17:00',
 }
 
 /* Home — The Process (short lines are approved prototype copy). */
@@ -61,8 +63,8 @@ export const documents: DocItem[] = [
   { key: 'passport', name: 'Valid passport', instr: 'At least 3 years to expiry.', adv: false },
   { key: 'hs', name: 'High school certificate and transcript', instr: 'Certified copies.', adv: false },
   { key: 'degree', name: 'Degree transcript', instr: 'Your university transcript and certificate.', adv: true },
-  { key: 'appform', name: 'Foreign student application form', instr: 'You fill this in on this website. We prepare the completed form for you when you submit.', adv: false, generated: true },
-  { key: 'medical', name: 'Medical report', instr: 'From Naguru hospital.', adv: false },
+  { key: 'appform', name: 'Foreign student application form', instr: 'Answer the questions in the online application and the finished form is produced for you. Nothing to print or scan.', adv: false, generated: true },
+  { key: 'medical', name: 'Medical report', instr: 'From Naguru Hospital.', adv: false },
   { key: 'police', name: 'Interpol police clearance certificate', instr: 'Issued within the last 6 months.', adv: false },
   { key: 'english', name: 'English proficiency letter', instr: 'From your previous school.', adv: false },
   { key: 'csca', name: 'CSCA exam transcript', instr: 'Only for scholarships that require the CSCA exam.', adv: false, cscaOnly: true },
@@ -100,6 +102,39 @@ export const alumni = [
   },
 ]
 
+/* Scholarships page — what the award does not pay for. Being straight about
+   this early is what separates a real placement service from a scam, and it
+   stops families budgeting for a trip they cannot afford.
+
+   [PLACEHOLDER] The office should add real figures for the flight, visa and
+   monthly living costs, and the service fee, once confirmed. */
+export const yourOwnCosts = [
+  {
+    item: 'Flight to China',
+    note: 'One way, booked once you have your admission letter and visa.',
+  },
+  {
+    item: 'Student visa',
+    note: 'Paid at the Chinese embassy in Kampala. We prepare the paperwork with you.',
+  },
+  {
+    item: 'Medical check and insurance',
+    note: 'A medical report before you travel, and insurance on arrival.',
+  },
+  {
+    item: 'Accommodation',
+    note: 'Covered on some programmes. Where it is not, expect 1,800 to 3,000 RMB per year.',
+  },
+  {
+    item: 'Food and day to day living',
+    note: 'Paid monthly by you or your sponsor. We tell you what students actually spend.',
+  },
+  {
+    item: 'Our service fee',
+    note: 'A single stated fee for placement and processing. You hear the full amount before you commit.',
+  },
+]
+
 /* Contact — FAQ. Questions are approved prototype copy. Answers are production
    copy; the fee and timing answers should be confirmed by the office. */
 export const faqs = [
@@ -117,7 +152,7 @@ export const faqs = [
   },
   {
     q: 'How long does the process take?',
-    a: 'It depends on the scholarship. Universities review applications in batches, and most applicants know their outcome two to four months after the deadline. We keep you updated while you wait and tell you as soon as we hear anything.',
+    a: 'It depends on the scholarship. Universities review applications in batches, and most applicants know their outcome 2 to 4 months after the deadline. We keep you updated while you wait and tell you as soon as we hear anything.',
   },
   {
     q: 'Do I need to speak Chinese?',

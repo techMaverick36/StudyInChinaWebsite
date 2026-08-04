@@ -117,7 +117,7 @@ export const steps: StepDef[] = [
             name: 'passportExpiry',
             label: 'Passport expiry date',
             type: 'date',
-            help: 'Your passport should have at least three years left before it expires.',
+            help: 'Your passport should have at least 3 years left before it expires.',
           },
           { name: 'idnum', label: 'National ID number (optional)', optional: true, placeholder: 'e.g. CM90000001ABCD' },
         ],

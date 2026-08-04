@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import HeroBackdrop from './HeroBackdrop'
 
 interface PageHeroProps {
   eyebrow: string
@@ -7,6 +8,8 @@ interface PageHeroProps {
   photoNote: string
   /* URL of the real photograph. When empty the striped placeholder shows. */
   photo?: string
+  /* Inline low-quality preview shown while the photo loads. */
+  blur?: string
   maxWidth?: number
   applyPad?: boolean
   titleNoMargin?: boolean
@@ -24,6 +27,7 @@ export default function PageHero({
   lede,
   photoNote,
   photo,
+  blur,
   maxWidth = 860,
   applyPad = false,
   titleNoMargin = false,
@@ -33,10 +37,7 @@ export default function PageHero({
 }: PageHeroProps) {
   return (
     <section className="page-hero">
-      <div className="page-hero-stripes" />
-      {photo && (
-        <div className="page-hero-photo" style={{ backgroundImage: `url(${photo})` }} />
-      )}
+      <HeroBackdrop src={photo} blur={blur} />
       <div className={`page-hero-shade${deepShade ? ' deep' : ''}`} />
       {!photo && <span className="photo-badge">PHOTO — {photoNote}</span>}
       <div

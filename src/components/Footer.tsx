@@ -19,7 +19,7 @@ export default function Footer() {
             <span className="footer-brand-name">StudyInChinaNow</span>
           </div>
           <p className="footer-blurb">
-            A Kampala based placement service helping Ugandan students study at
+            A Kampala-based placement service helping Ugandan students study at
             Chinese universities on scholarship.
           </p>
         </div>

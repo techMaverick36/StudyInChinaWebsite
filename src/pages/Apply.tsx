@@ -3,8 +3,9 @@ import type { ChangeEvent } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { usePageMeta } from '../lib/meta'
 import { getScholarship, scholarships } from '../data/scholarships'
-import { documents } from '../data/content'
-import { photos } from '../data/photos'
+import { contact, documents } from '../data/content'
+import { photos, photoBlurs } from '../data/photos'
+import HeroBackdrop from '../components/HeroBackdrop'
 import {
   MAX_EDUCATION_ROWS,
   MAX_EMPLOYMENT_ROWS,
@@ -141,7 +142,7 @@ export default function Apply() {
       return 'This passport has already expired. You will need to renew it before you can travel.'
     }
     if (expiry < threeYears) {
-      return 'Most of these scholarships ask for at least three years left on your passport. You can still apply, but start renewing it now.'
+      return 'Most of these scholarships ask for at least 3 years left on your passport. You can still apply, but start renewing it now.'
     }
     return ''
   })()
@@ -221,7 +222,7 @@ export default function Apply() {
       setSubmitError(
         err instanceof SubmitError
           ? err.message
-          : 'Something went wrong while sending your application. Please try again. If it keeps failing, call the office on +256 700 000 000 and we will take your application by phone.',
+          : `Something went wrong while sending your application. Please try again. If it keeps failing, call the office on ${contact.phone} and we will take your application by phone.`,
       )
     } finally {
       setSubmitting(false)
@@ -298,12 +299,8 @@ export default function Apply() {
   return (
     <>
       <section className="page-hero">
-        <div className="page-hero-stripes" />
-        {photos.apply && (
-          <div className="page-hero-photo" style={{ backgroundImage: `url(${photos.apply})` }} />
-        )}
+        <HeroBackdrop src={photos.apply} blur={photoBlurs.apply} />
         <div className="page-hero-shade deep" />
-        {!photos.apply && <span className="photo-badge">PHOTO — student applying online</span>}
         <div className="page-hero-inner apply-pad" style={{ maxWidth: 780 }}>
           <p className="eyebrow-hero">Application</p>
           <h1 className="page-title no-mb apply-size">Apply for a scholarship</h1>
@@ -346,7 +343,7 @@ export default function Apply() {
             )}
 
             <p className="apply-step-line">
-              Step {step} of {TOTAL_STEPS} — <strong>{STEP_LABELS[step - 1]}</strong>
+              Step {step} of {TOTAL_STEPS}: <strong>{STEP_LABELS[step - 1]}</strong>
             </p>
 
             <div className="apply-progress">
@@ -930,8 +927,8 @@ export default function Apply() {
               </div>
             )}
             <p className="confirm-p2">
-              If you do not hear from us within a week, call the office on +256 700 000 000 or
-              email admissions@studyinchinanow.com.
+              If you do not hear from us within a week, call the office on {contact.phone} or
+              email {contact.email}.
             </p>
             {formDocUrl && (
               <p className="confirm-download">

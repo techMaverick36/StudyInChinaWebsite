@@ -2,7 +2,7 @@ import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { usePageMeta } from '../lib/meta'
 import PageHero from '../components/PageHero'
-import { photos } from '../data/photos'
+import { photos, photoBlurs } from '../data/photos'
 import { contact, faqs } from '../data/content'
 import { submitContactMessage } from '../lib/submit'
 
@@ -14,7 +14,7 @@ export default function Contact() {
 
   usePageMeta(
     'Contact Us | StudyInChinaNow',
-    'Ask about scholarships, documents or deadlines. Call, email, WhatsApp or visit our office at Church House, Kampala Road, Kampala. Frequently asked questions answered.',
+    'Ask about scholarships, documents or deadlines. Call, email, WhatsApp or visit the office at Universal House, Luwum Street, Kampala. Frequently asked questions answered.',
   )
 
   const [sendError, setSendError] = useState('')
@@ -44,8 +44,9 @@ export default function Contact() {
         eyebrow="Contact"
         title="Get in touch"
         lede="Call, write or visit the office. There is no charge for asking."
-        photoNote="Enjosh office on Kampala Road"
+        photoNote="the office on Luwum Street"
         photo={photos.contact}
+        blur={photoBlurs.contact}
         maxWidth={1000}
       />
       <div className="container-1000 body-pad">

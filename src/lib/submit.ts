@@ -1,6 +1,7 @@
 import { FILES_BUCKET, supabase } from './supabase'
 import { buildApplicationPdf } from './applicationPdf'
 import type { EducationRow, EmploymentRow } from '../data/applicationForm'
+import { contact } from '../data/content'
 
 /* Form submissions. With Supabase configured (see .env.example) these save
    applications, uploaded documents and contact messages for the admin panel
@@ -134,7 +135,7 @@ export async function submitApplication(
     console.error('Application insert failed:', error)
     if (/row-level security|policy|permission/i.test(error.message)) {
       throw new SubmitError(
-        'Our system could not save your application. This is a problem on our side. Please try again later, or call the office on +256 700 000 000 and we will take your application by phone.',
+        `Our system could not save your application. This is a problem on our side. Please try again later, or call the office on ${contact.phone} and we will take your application by phone.`,
       )
     }
     throw new SubmitError(

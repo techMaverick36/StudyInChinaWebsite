@@ -1,14 +1,14 @@
 import { useNavigate } from 'react-router-dom'
 import { usePageMeta } from '../lib/meta'
 import PageHero from '../components/PageHero'
-import { photos } from '../data/photos'
+import { photos, photoBlurs } from '../data/photos'
 import { guideSteps } from '../data/content'
 
 export default function HowToApply() {
   const navigate = useNavigate()
   usePageMeta(
     'How to Apply | StudyInChinaNow',
-    'How to apply for a fully funded scholarship in China from Uganda: check you qualify, prepare your documents, complete one online application, and we handle the rest.',
+    'How to apply for a scholarship in China from Uganda: check you qualify, prepare your documents, and complete one online application. Four steps, about 15 minutes.',
   )
 
   return (
@@ -19,6 +19,7 @@ export default function HowToApply() {
         lede="Four steps, all online, about 15 minutes once your documents are ready."
         photoNote="students being guided at the office"
         photo={photos.howToApply}
+        blur={photoBlurs.howToApply}
       />
       <div className="container-860 body-pad">
         <div>

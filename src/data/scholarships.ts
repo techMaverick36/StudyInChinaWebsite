@@ -53,38 +53,39 @@ export const scholarships: Scholarship[] = [
       'Mechanical Engineering',
       'Computer Science and Technology',
       'Pharmacy',
-      'Clinical Medicine (self funded)',
+      'Clinical Medicine (self-funded)',
     ],
     blurb:
-      'Study at a top ranking Chinese university. First class CSCA results earn full tuition free; second class results earn 50 percent off.',
+      'Study at a top-ranking Chinese university. A first-class CSCA result covers your tuition in full. A second-class result covers half.',
     about1:
-      'This scholarship places you at a top ranking university in China for the September 2026 intake. The award is decided by your CSCA exam results: a first class result covers your tuition in full, and a second class result covers half of it. Five majors are open, from Transportation and Mechanical Engineering to Computer Science and Technology, Pharmacy, and Clinical Medicine.',
+      'This scholarship places you at a top-ranking university in China for the September 2026 intake. The award is decided by your CSCA exam results: a first-class result covers your tuition in full, and a second-class result covers half of it. Five majors are open, from Transportation and Mechanical Engineering to Computer Science and Technology, Pharmacy, and Clinical Medicine.',
     about2:
-      'You sit the CSCA exam and submit your transcripts with your application. Note that Clinical Medicine is self funded: it is offered at the same university but without the tuition award.',
+      'You sit the CSCA exam and submit your transcripts with your application. Note that Clinical Medicine is self-funded: it is offered at the same university but without the tuition award.',
     facts: [
       { label: 'Level', value: "Bachelor's" },
       { label: 'Location', value: 'Top-ranking university, China (named at placement)' },
       {
         label: 'Award',
-        value: 'Full tuition free with first class CSCA results; 50 percent tuition free with second class',
+        value:
+          'Tuition covered in full with a first-class CSCA result; half covered with a second-class result',
       },
       { label: 'Exam', value: 'CSCA exam transcripts required' },
       {
         label: 'Majors',
         value:
-          'Transportation Engineering · Mechanical Engineering · Computer Science and Technology · Pharmacy · Clinical Medicine (self funded)',
+          'Transportation Engineering · Mechanical Engineering · Computer Science and Technology · Pharmacy · Clinical Medicine (self-funded)',
       },
       { label: 'Intake', value: 'September 2026. Application deadline to be confirmed.' },
     ],
     eligibility: [
       'Ugandan citizenship and a valid passport (at least three years to expiry).',
       'Completed high school with good grades.',
-      'CSCA exam transcripts. First class results earn full tuition free; second class results earn 50 percent off.',
+      'CSCA exam transcripts. A first-class result covers tuition in full; a second-class result covers half.',
       'Good conduct, confirmed by a police clearance certificate.',
       'Willingness to study full time in China.',
     ],
     funding:
-      'Your CSCA results decide the award. With first class results your tuition is covered in full. With second class results half of your tuition is covered. Accommodation and living costs are paid by the student, and Clinical Medicine is fully self funded. We confirm the exact costs for your university before you accept a place.',
+      'Your CSCA results decide the award. With a first-class result your tuition is covered in full. With a second-class result, half of it is covered. Accommodation and living costs are paid by the student, and Clinical Medicine is fully self-funded. We confirm the exact costs for your university before you accept a place.',
     timeline:
       'The intake is September 2026 and the final application deadline is being confirmed. CSCA exam sittings fill early, so start your application now and we will guide you on booking the exam in good time. Once you are admitted, we help with your visa, medical checks and travel.',
     fees: serviceFees,
@@ -114,7 +115,7 @@ export const scholarships: Scholarship[] = [
     facts: [
       { label: 'Level', value: "Bachelor's" },
       { label: 'Location', value: 'Partner university, China (named at placement)' },
-      { label: 'Award', value: 'Full tuition free. Hostel fee 1,800 RMB per year.' },
+      { label: 'Award', value: 'Tuition covered in full. Hostel fee 1,800 RMB per year.' },
       { label: 'Exam', value: 'CSCA exam required' },
       {
         label: 'Majors',
@@ -132,9 +133,9 @@ export const scholarships: Scholarship[] = [
       'Willingness to study full time in China.',
     ],
     funding:
-      'Tuition is fully covered for all four majors. There is no partial award here: every admitted student studies tuition free. You pay the hostel fee of 1,800 RMB per year and your own living costs, and we tell you what to budget before you accept.',
+      'Tuition is fully covered for all four majors. There is no partial award here: every admitted student pays no tuition. You pay the hostel fee of 1,800 RMB per year and your own living costs, and we tell you what to budget before you accept.',
     timeline:
-      'This is the last call for the September 2026 intake. Places are nearly full and files are reviewed as they arrive, so apply today and send your documents as soon as you can. We fast track complete applications.',
+      'This is the last call for the September 2026 intake. Places are nearly full and files are reviewed as they arrive, so apply today and send your documents as soon as you can. Complete applications are reviewed first.',
     fees: serviceFees,
   },
   {
@@ -153,7 +154,7 @@ export const scholarships: Scholarship[] = [
       'International Chinese Education',
     ],
     blurb:
-      'English taught programmes in Hubei with no CSCA exam. Tuition drops from 20,000 to 7,000 RMB per year, and top students can win a 20,000 RMB provincial award.',
+      'English-taught programmes in Hubei with no CSCA exam. Tuition drops from 20,000 to 7,000 RMB per year, and top students can win a 20,000 RMB provincial award.',
     about1:
       'This scholarship is for students who want to start without sitting the CSCA exam. All three majors are taught fully in English at a university in Hubei Province. The scholarship cuts tuition from 20,000 RMB to 7,000 RMB per year, and university accommodation is 3,000 RMB per year.',
     about2:

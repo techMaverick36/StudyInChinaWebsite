@@ -190,11 +190,47 @@ textarea:focus {
 .hero-bg {
   position: relative;
   min-height: clamp(520px, 68vh, 760px);
-  background-size: cover;
-  background-position: center right;
+  background: #0f2a44;
   display: flex;
   align-items: center;
   overflow: hidden;
+}
+.hero-gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(11, 22, 35, 0.92) 0%,
+    rgba(11, 22, 35, 0.72) 42%,
+    rgba(11, 22, 35, 0.32) 70%
+  );
+}
+
+/* Banner photography: an inline preview paints immediately, then the full
+   image fades in once decoded, so no page ever shows a bare navy band. */
+.hero-backdrop-blur {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transform: scale(1.06);
+}
+.hero-backdrop-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+.hero-backdrop-img.loaded {
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-backdrop-img {
+    transition: none;
+  }
 }
 .hero-slash {
   position: absolute;
@@ -747,6 +783,195 @@ textarea:focus {
 }
 .scard-view:hover {
   text-decoration: underline;
+}
+
+/* ===== Scholarships page: comparison, subjects, costs ===== */
+.compare-scroll {
+  overflow-x: auto;
+  border: 1px solid #dde4ea;
+  border-radius: 6px;
+  background: #fff;
+  -webkit-overflow-scrolling: touch;
+}
+.compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 720px;
+  font-size: 14.5px;
+}
+.compare-table th,
+.compare-table td {
+  padding: 14px 16px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid #edf1f4;
+}
+.compare-table thead th {
+  background: #12283d;
+  color: #fff;
+  font: 600 14.5px 'Inter', sans-serif;
+  line-height: 1.35;
+  border-bottom: none;
+}
+.compare-table thead th:first-child {
+  width: 150px;
+}
+.compare-table tbody th {
+  font: 700 11.5px 'Inter', sans-serif;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: #8a6d2f;
+  background: #fafbfc;
+  white-space: nowrap;
+}
+.compare-table tbody td {
+  color: #42505c;
+  line-height: 1.5;
+}
+.compare-table tbody tr:last-child th,
+.compare-table tbody tr:last-child td {
+  border-bottom: none;
+}
+.flag-need,
+.flag-no {
+  display: inline-block;
+  font: 700 11.5px 'Inter', sans-serif;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 4px 9px;
+  border-radius: 3px;
+}
+.flag-need {
+  color: #8a2b1a;
+  background: #fbeeea;
+  border: 1px solid #f0d3cb;
+}
+.flag-no {
+  color: #1f7a43;
+  background: #f2f9f4;
+  border: 1px solid #bfe0c9;
+}
+
+.choose-h {
+  font-family: 'Source Serif 4', serif;
+  font-weight: 600;
+  font-size: 22px;
+  color: #16395c;
+  margin: 44px 0 18px;
+}
+.choose-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
+}
+.choose-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: left;
+  background: #fff;
+  border: 1px solid #dde4ea;
+  border-left: 3px solid #c8102e;
+  border-radius: 6px;
+  padding: 20px 22px;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.choose-card:hover {
+  border-color: #16395c;
+  border-left-color: #c8102e;
+  box-shadow: 0 3px 12px rgba(18, 40, 61, 0.09);
+}
+.choose-when {
+  font: 600 16px 'Inter', sans-serif;
+  color: #16395c;
+  line-height: 1.35;
+}
+.choose-then {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: #5c6b78;
+}
+
+.subject-grid {
+  border: 1px solid #e2e7ec;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.subject-row {
+  display: grid;
+  grid-template-columns: minmax(200px, 300px) 1fr;
+  gap: 16px;
+  padding: 14px 18px;
+  border-bottom: 1px solid #edf1f4;
+  align-items: center;
+}
+.subject-row:last-child {
+  border-bottom: none;
+}
+.subject-row:nth-child(even) {
+  background: #fafbfc;
+}
+.subject-name {
+  font: 600 15.5px 'Inter', sans-serif;
+  color: #16395c;
+}
+.subject-where {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.subject-chip {
+  font: 600 12px 'Inter', sans-serif;
+  color: #3a4753;
+  background: #eef2f6;
+  border: 1px solid #dde4ea;
+  padding: 4px 10px;
+  border-radius: 3px;
+}
+.subject-note {
+  margin: 16px 0 0;
+  color: #5c6b78;
+  font-size: 14px;
+  line-height: 1.6;
+}
+@media (max-width: 620px) {
+  .subject-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    align-items: start;
+  }
+}
+
+.costs-intro {
+  color: #c7d2dc;
+  font-size: 16px;
+  line-height: 1.7;
+  max-width: 62ch;
+  margin: 0 0 32px;
+}
+.costs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 18px;
+}
+.cost-item {
+  background: #1d3349;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-top: 2px solid #d9b45f;
+  border-radius: 5px;
+  padding: 20px 22px;
+}
+.cost-name {
+  font: 600 16px 'Inter', sans-serif;
+  color: #fff;
+  margin-bottom: 7px;
+}
+.cost-note {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: #a9bac8;
 }
 
 /* ===== Scholarship detail ===== */
@@ -2511,8 +2736,18 @@ select.field-input {
   .acc-toggle,
   .footer-link,
   .apply-step-btn,
-  .whatsapp-btn {
+  .whatsapp-btn,
+  .brand {
     min-height: 44px;
+  }
+  /* Phone and email in the contact cards are tapped, so give them a target. */
+  .contact-value a {
+    display: inline-block;
+    padding: 11px 0;
+  }
+  .contact-detail-card {
+    padding-top: 8px;
+    padding-bottom: 8px;
   }
   .footer-link,
   .scard-view,

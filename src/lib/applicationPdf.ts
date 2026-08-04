@@ -17,9 +17,12 @@ export interface ApplicationPdfInput {
   documents: string[]
 }
 
-/* A4 at 150 dpi. */
+/* Layout is measured against A4 at 150 dpi. Pages are rasterised at
+   RENDER_SCALE of that, which keeps the text sharp while cutting the file to
+   roughly a third: these forms are emailed and opened on phone data. */
 const PAGE_W = 1240
 const PAGE_H = 1754
+const RENDER_SCALE = 0.8
 const MARGIN = 70
 const CONTENT_W = PAGE_W - MARGIN * 2
 
@@ -50,9 +53,11 @@ class Doc {
 
   newPage() {
     const c = document.createElement('canvas')
-    c.width = PAGE_W
-    c.height = PAGE_H
+    c.width = Math.round(PAGE_W * RENDER_SCALE)
+    c.height = Math.round(PAGE_H * RENDER_SCALE)
     const ctx = c.getContext('2d')!
+    /* Draw in the 150 dpi coordinate system regardless of the output scale. */
+    ctx.scale(RENDER_SCALE, RENDER_SCALE)
     ctx.fillStyle = '#ffffff'
     ctx.fillRect(0, 0, PAGE_W, PAGE_H)
     ctx.textBaseline = 'top'
@@ -222,7 +227,9 @@ function toPdf(pages: HTMLCanvasElement[]): Blob {
   const images: { id: number; bytes: Uint8Array; w: number; h: number }[] = []
 
   for (const canvas of pages) {
-    const dataUrl = canvas.toDataURL('image/jpeg', 0.94)
+    /* 0.82 keeps the text crisp at 150 dpi while keeping the file small enough
+       to email and to open on a phone connection. */
+    const dataUrl = canvas.toDataURL('image/jpeg', 0.82)
     const bytes = base64ToBytes(dataUrl.split(',')[1])
     const pageId = next++
     const contentId = next++
