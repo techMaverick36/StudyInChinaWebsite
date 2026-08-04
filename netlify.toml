@@ -1,0 +1,64 @@
+# Netlify deployment settings for StudyInChinaNow.
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+[dev]
+  command = "npm run dev"
+  port = 5173
+  publish = "dist"
+  targetPort = 5173
+
+# This site is a single-page app: the router handles /scholarships, /apply,
+# /admin and the rest in the browser. Without this rule Netlify looks for a
+# matching file on disk and returns its 404 page whenever someone refreshes,
+# opens a link directly, or returns from an emailed admin login link.
+# Serving index.html with status 200 (a rewrite, not a redirect) lets the
+# router take over while keeping the URL intact.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Filenames under /assets are content-hashed by Vite, so a changed file gets a
+# new name. Caching them forever is safe and keeps repeat visits quick on a
+# phone connection.
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# index.html must never be cached, or visitors keep loading an old build.
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/favicon.svg"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "SAMEORIGIN"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+# Keep the internal admin panel out of search results.
+[[headers]]
+  for = "/admin*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
