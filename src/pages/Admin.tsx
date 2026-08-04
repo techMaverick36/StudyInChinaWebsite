@@ -326,7 +326,6 @@ function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [busy, setBusy] = useState(false)
-  const [note, setNote] = useState('')
   const [error, setError] = useState('')
 
   const signIn = async (e: FormEvent) => {
@@ -334,29 +333,8 @@ function Login() {
     if (!supabase) return
     setBusy(true)
     setError('')
-    setNote('')
     const { error: err } = await supabase.auth.signInWithPassword({ email, password })
     if (err) setError(err.message)
-    setBusy(false)
-  }
-
-  const sendLink = async () => {
-    if (!supabase) return
-    if (!email.trim()) {
-      setError('Enter your email first, then request the login link.')
-      return
-    }
-    setBusy(true)
-    setError('')
-    const { error: err } = await supabase.auth.signInWithOtp({
-      email,
-      options: {
-        shouldCreateUser: false,
-        emailRedirectTo: `${window.location.origin}/admin`,
-      },
-    })
-    if (err) setError(err.message)
-    else setNote('Check your email. The login link signs you in on this device.')
     setBusy(false)
   }
 
@@ -396,25 +374,15 @@ function Login() {
           <button className="btn-red-md" type="submit" disabled={busy}>
             {busy ? 'Signing in…' : 'Sign in'}
           </button>
-          <button
-            className="btn-outline-navy"
-            type="button"
-            disabled={busy}
-            onClick={sendLink}
-          >
-            Email me a login link
-          </button>
         </div>
       </form>
-      {note && <p className="contact-form-note">{note}</p>}
       {error && (
         <p className="form-error" role="alert">
           {error}
         </p>
       )}
         <p className="admin-hint">
-          No password yet? Use "Email me a login link", then set a password from
-          the Account section once you are in.
+          Sign in with the password set for your admin account.
         </p>
       </div>
     </AdminShell>
