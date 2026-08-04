@@ -5,6 +5,8 @@ interface PageHeroProps {
   title: string
   lede?: string
   photoNote: string
+  /* URL of the real photograph. When empty the striped placeholder shows. */
+  photo?: string
   maxWidth?: number
   applyPad?: boolean
   titleNoMargin?: boolean
@@ -13,13 +15,15 @@ interface PageHeroProps {
   children?: ReactNode
 }
 
-/* Interior-page hero. The striped background is a clearly marked placeholder
-   for the real photo named in `photoNote` (to be supplied by the client). */
+/* Interior-page hero. Without a photo it shows a clearly marked placeholder
+   naming the shot still needed. The stripes stay underneath the photo, so a
+   missing or slow image degrades to the placeholder rather than a blank band. */
 export default function PageHero({
   eyebrow,
   title,
   lede,
   photoNote,
+  photo,
   maxWidth = 860,
   applyPad = false,
   titleNoMargin = false,
@@ -30,8 +34,11 @@ export default function PageHero({
   return (
     <section className="page-hero">
       <div className="page-hero-stripes" />
+      {photo && (
+        <div className="page-hero-photo" style={{ backgroundImage: `url(${photo})` }} />
+      )}
       <div className={`page-hero-shade${deepShade ? ' deep' : ''}`} />
-      <span className="photo-badge">PHOTO — {photoNote}</span>
+      {!photo && <span className="photo-badge">PHOTO — {photoNote}</span>}
       <div
         className={`page-hero-inner${applyPad ? ' apply-pad' : ''}`}
         style={{ maxWidth }}

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { usePageMeta } from '../lib/meta'
 import { getScholarship, statusColorLight } from '../data/scholarships'
+import { photos } from '../data/photos'
 
 export default function ScholarshipDetail() {
   const { id } = useParams()
@@ -24,8 +25,16 @@ export default function ScholarshipDetail() {
     <>
       <section className="page-hero detail">
         <div className="page-hero-stripes" />
+        {photos.scholarshipDetail && (
+          <div
+            className="page-hero-photo"
+            style={{ backgroundImage: `url(${photos.scholarshipDetail})` }}
+          />
+        )}
         <div className="page-hero-shade deep" />
-        <span className="photo-badge">PHOTO — campus &amp; students</span>
+        {!photos.scholarshipDetail && (
+          <span className="photo-badge">PHOTO — campus &amp; students</span>
+        )}
         <div className="page-hero-back-row">
           <button className="hero-back" onClick={() => navigate('/scholarships')}>
             ← All scholarships

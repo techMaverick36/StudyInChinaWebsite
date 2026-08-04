@@ -4,10 +4,10 @@
 
 export const contact = {
   /* [PLACEHOLDER] Confirm real phone number, email and WhatsApp link. */
-  phone: '+256 700 000 000',
+  phone: '+256 701 458000',
   email: 'admissions@studyinchinanow.com',
-  whatsappUrl: 'https://wa.me/256700000000',
-  addressLines: ['Church House, Level 13', 'Kampala Road, Kampala', 'Uganda'],
+  whatsappUrl: 'https://wa.me/256701458000',
+  addressLines: ['Universal House, Shop G14', 'Luwum Street', 'Kampala Uganda'],
   hours: 'Monday – Friday, 9:00 – 17:00',
 }
 
@@ -29,7 +29,7 @@ export const guideSteps = [
   {
     num: '2',
     title: 'Prepare your documents',
-    body: 'Most delays happen at this stage, so start early. Some documents, like the Interpol police clearance, can take several weeks to obtain. The Requirements page lists everything you need, with a short instruction for each item and blank templates you can download.',
+    body: 'Most delays happen at this stage, so start early. Some documents, like the Interpol police clearance, can take several weeks to obtain. The Requirements page lists everything you need, with a short instruction for each item.',
   },
   {
     num: '3',
@@ -52,6 +52,8 @@ export interface DocItem {
   adv: boolean
   /* Only needed when the selected scholarship requires the CSCA exam. */
   cscaOnly?: boolean
+  /* Produced by the site from the online form; the applicant uploads nothing. */
+  generated?: boolean
 }
 
 export const documents: DocItem[] = [
@@ -59,7 +61,7 @@ export const documents: DocItem[] = [
   { key: 'passport', name: 'Valid passport', instr: 'At least 3 years to expiry.', adv: false },
   { key: 'hs', name: 'High school certificate and transcript', instr: 'Certified copies.', adv: false },
   { key: 'degree', name: 'Degree transcript', instr: 'Your university transcript and certificate.', adv: true },
-  { key: 'appform', name: 'Foreign student application form', instr: 'Blank form available to download on the Requirements page.', adv: false },
+  { key: 'appform', name: 'Foreign student application form', instr: 'You fill this in on this website. We prepare the completed form for you when you submit.', adv: false, generated: true },
   { key: 'medical', name: 'Medical report', instr: 'From Naguru hospital.', adv: false },
   { key: 'police', name: 'Interpol police clearance certificate', instr: 'Issued within the last 6 months.', adv: false },
   { key: 'english', name: 'English proficiency letter', instr: 'From your previous school.', adv: false },
@@ -70,29 +72,31 @@ export const documents: DocItem[] = [
   { key: 'bank', name: 'Bank statement', instr: 'Covering the last 3 to 6 months.', adv: false },
 ]
 
-/* Home — Student Voices. Names and universities are approved prototype content;
-   quotes are awaiting real testimonials from the client. */
+/* Home — Student Voices.
+
+   IMPORTANT, BEFORE LAUNCH: the names below are real students taken from the
+   admission letters supplied by the office. The quotes are DRAFTS written for
+   them, not words they have said. Each student must read and approve their own
+   quote (in writing) before this section goes live, and the university and year
+   need filling in. Until then `approved` stays false. */
 export const alumni = [
   {
-    initials: 'NG',
-    name: 'Nakato Grace',
-    meta: 'Wuhan University of Technology · 2022',
-    quote: '[PLACEHOLDER: real testimonial from Nakato Grace to be supplied]',
-    placeholder: true,
+    initials: 'JN',
+    name: 'Janat Namugga',
+    /* [PLACEHOLDER] Confirm university and intake year. */
+    meta: 'Admitted for the 2026 intake',
+    quote:
+      'I thought it was a scam at first. I went to the office and asked my questions face to face, and they showed me every document I needed and what the fee covered. My admission letter came through with nothing hidden.',
+    approved: false,
   },
   {
-    initials: 'MR',
-    name: 'Mugisha Ronald',
-    meta: 'Huazhong University of Science · 2023',
-    quote: '[PLACEHOLDER: real testimonial from Mugisha Ronald to be supplied]',
-    placeholder: true,
-  },
-  {
-    initials: 'NA',
-    name: 'Namutebi Aisha',
-    meta: 'Peking University · 2023',
-    quote: '[PLACEHOLDER: real testimonial from Namutebi Aisha to be supplied]',
-    placeholder: true,
+    initials: 'P',
+    /* [PLACEHOLDER] Confirm Patrick's surname. */
+    name: 'Patrick',
+    meta: 'Admitted for the 2026 intake',
+    quote:
+      'The police clearance took me almost a month, so I was glad they told me to start early. When a document was wrong they called me and explained how to fix it. I never had to guess what was happening.',
+    approved: false,
   },
 ]
 
@@ -105,7 +109,7 @@ export const faqs = [
   },
   {
     q: 'What documents do I need?',
-    a: 'You need your passport, academic certificates and transcripts, a medical report, an Interpol police clearance, recommendation letters and a few other items. The full list is on the Requirements page, with a short instruction for each document and blank templates you can download.',
+    a: 'You need your passport, academic certificates and transcripts, a medical report, an Interpol police clearance, recommendation letters and a few other items. The full list is on the Requirements page, with a short instruction for each document. You do not need to download or print the application form: you fill that in on this website.',
   },
   {
     q: 'Are there any fees?',

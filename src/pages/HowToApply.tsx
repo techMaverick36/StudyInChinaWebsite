@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { usePageMeta } from '../lib/meta'
 import PageHero from '../components/PageHero'
+import { photos } from '../data/photos'
 import { guideSteps } from '../data/content'
 
 export default function HowToApply() {
@@ -15,8 +16,9 @@ export default function HowToApply() {
       <PageHero
         eyebrow="How to apply"
         title="A simple, step-by-step guide"
-        lede="The whole application happens on this website and takes about 10 to 15 minutes once your documents are ready. Here is what happens at each stage, and what we do for you."
+        lede="Four steps, all online, about 15 minutes once your documents are ready."
         photoNote="students being guided at the office"
+        photo={photos.howToApply}
       />
       <div className="container-860 body-pad">
         <div>
@@ -34,10 +36,9 @@ export default function HowToApply() {
         <div className="prep-box">
           <h3 className="prep-title">Before you begin, prepare your documents</h3>
           <p className="prep-body">
-            You will need scanned copies of your documents to finish the
-            application. The full list is on the Requirements page, together
-            with blank copies of the application form, recommendation letter
-            and study plan templates you can download.
+            You will need scanned copies to finish the application. There is no
+            form to print: you fill in the official application form here and we
+            prepare it for you.
           </p>
           <button className="btn-outline-navy" onClick={() => navigate('/requirements')}>
             View required documents

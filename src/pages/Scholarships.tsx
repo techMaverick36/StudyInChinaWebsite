@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { usePageMeta } from '../lib/meta'
 import PageHero from '../components/PageHero'
 import { scholarships, statusColor } from '../data/scholarships'
+import { photos } from '../data/photos'
 
 export default function Scholarships() {
   const navigate = useNavigate()
@@ -15,8 +16,9 @@ export default function Scholarships() {
       <PageHero
         eyebrow="Programmes"
         title="Available scholarships"
-        lede="These are the programmes we currently place students on. Each one is fully funded or close to it, and each has its own deadline and entry rules. Open the one you are interested in to see what it covers and what you need to apply."
+        lede="The programmes we are placing students on now. Open one to see what it covers and who can apply."
         photoNote="university campus in China"
+        photo={photos.scholarships}
         maxWidth={1140}
       />
       <div className="container body-pad">

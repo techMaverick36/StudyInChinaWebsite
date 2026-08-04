@@ -2,6 +2,7 @@ import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { usePageMeta } from '../lib/meta'
 import PageHero from '../components/PageHero'
+import { photos } from '../data/photos'
 import { contact, faqs } from '../data/content'
 import { submitContactMessage } from '../lib/submit'
 
@@ -42,24 +43,27 @@ export default function Contact() {
       <PageHero
         eyebrow="Contact"
         title="Get in touch"
-        lede="Ask us anything about scholarships, documents or deadlines. Call, write or visit the office. We answer in plain language, and there is no charge for asking."
+        lede="Call, write or visit the office. There is no charge for asking."
         photoNote="Enjosh office on Kampala Road"
+        photo={photos.contact}
         maxWidth={1000}
       />
       <div className="container-1000 body-pad">
-        <div className="contact-grid">
-          <div>
-            <div className="contact-item">
+        <div className="contact-split">
+          <aside className="contact-details">
+            <div className="contact-detail-card">
               <div className="contact-label">Phone</div>
-              <div className="contact-value">{contact.phone}</div>
+              <div className="contact-value">
+                <a href={`tel:${contact.phone.replace(/\s+/g, '')}`}>{contact.phone}</a>
+              </div>
             </div>
-            <div className="contact-item">
+            <div className="contact-detail-card">
               <div className="contact-label">Email</div>
               <div className="contact-value">
                 <a href={`mailto:${contact.email}`}>{contact.email}</a>
               </div>
             </div>
-            <div className="contact-item">
+            <div className="contact-detail-card">
               <div className="contact-label">Office</div>
               <div className="contact-value multiline">
                 {contact.addressLines.map((line, i) => (
@@ -70,90 +74,95 @@ export default function Contact() {
                 ))}
               </div>
             </div>
-            <div className="contact-item" style={{ marginBottom: 24 }}>
+            <div className="contact-detail-card">
               <div className="contact-label">Office hours</div>
               <div className="contact-value">{contact.hours}</div>
             </div>
             <a
-              className="whatsapp-btn"
+              className="whatsapp-btn contact-whatsapp-full"
               href={contact.whatsappUrl}
               target="_blank"
               rel="noreferrer"
             >
               Message us on WhatsApp
             </a>
-          </div>
-          <div className="map-placeholder">
-            <span className="map-badge">MAP — Church House, Kampala Road, Kampala</span>
+            <p className="contact-visit-note">
+              You are welcome to visit the office in person. No appointment is
+              needed during office hours.
+            </p>
+          </aside>
+
+          <div className="contact-form-card">
+            <h2 className="contact-form-title">Send us a message</h2>
+            <p className="contact-form-intro">
+              Tell us what you would like to know and we will reply within one
+              working day.
+            </p>
+            <form onSubmit={onSubmit}>
+              <div className="contact-field-stack">
+                <div>
+                  <label className="field-label" htmlFor="cf-name">
+                    Your name
+                  </label>
+                  <input
+                    id="cf-name"
+                    className="field-input"
+                    value={form.name}
+                    onChange={(e) => setForm({ ...form, name: e.target.value })}
+                    placeholder="Full name"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="field-label" htmlFor="cf-contact">
+                    Phone or email
+                  </label>
+                  <input
+                    id="cf-contact"
+                    className="field-input"
+                    value={form.contact}
+                    onChange={(e) => setForm({ ...form, contact: e.target.value })}
+                    placeholder="+256 7XX XXX XXX or you@example.com"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="field-label" htmlFor="cf-message">
+                    Your message
+                  </label>
+                  <textarea
+                    id="cf-message"
+                    className="field-input"
+                    rows={6}
+                    value={form.message}
+                    onChange={(e) => setForm({ ...form, message: e.target.value })}
+                    placeholder="Tell us what you would like to know"
+                    required
+                    style={{ resize: 'vertical' }}
+                  />
+                </div>
+              </div>
+              <div className="contact-submit-row">
+                <button className="btn-red-md" type="submit" disabled={sending}>
+                  {sending ? 'Sending…' : 'Send message'}
+                </button>
+                {sent && (
+                  <p className="contact-form-note">
+                    Thank you. Your message has been received. We reply within one
+                    working day.
+                  </p>
+                )}
+                {sendError && (
+                  <p className="form-error" role="alert">
+                    {sendError}
+                  </p>
+                )}
+              </div>
+            </form>
           </div>
         </div>
 
-        <div className="contact-form-block">
-          <h2 className="faq-h">Send us a message</h2>
-          <form onSubmit={onSubmit}>
-            <div className="field-grid">
-              <div>
-                <label className="field-label" htmlFor="cf-name">
-                  Your name
-                </label>
-                <input
-                  id="cf-name"
-                  className="field-input"
-                  value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  placeholder="Full name"
-                  required
-                />
-              </div>
-              <div>
-                <label className="field-label" htmlFor="cf-contact">
-                  Phone or email
-                </label>
-                <input
-                  id="cf-contact"
-                  className="field-input"
-                  value={form.contact}
-                  onChange={(e) => setForm({ ...form, contact: e.target.value })}
-                  placeholder="+256 7XX XXX XXX or you@example.com"
-                  required
-                />
-              </div>
-              <div className="field-full">
-                <label className="field-label" htmlFor="cf-message">
-                  Your message
-                </label>
-                <textarea
-                  id="cf-message"
-                  className="field-input"
-                  rows={5}
-                  value={form.message}
-                  onChange={(e) => setForm({ ...form, message: e.target.value })}
-                  placeholder="Tell us what you would like to know"
-                  required
-                  style={{ resize: 'vertical' }}
-                />
-              </div>
-            </div>
-            <div style={{ marginTop: 18 }}>
-              <button className="btn-red-md" type="submit" disabled={sending}>
-                {sending ? 'Sending…' : 'Send message'}
-              </button>
-              {sent && (
-                <p className="contact-form-note">
-                  Thank you. Your message has been received. We reply within one
-                  working day.
-                </p>
-              )}
-              {sendError && (
-                <p className="form-error" role="alert">
-                  {sendError}
-                </p>
-              )}
-            </div>
-          </form>
-        </div>
-
-        <h2 className="faq-h">Frequently asked questions</h2>
+        <h2 className="faq-h contact-faq-h">Frequently asked questions</h2>
         <div className="faq-list">
           {faqs.map((f, i) => {
             const open = openFaq === i

@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { usePageMeta } from "../lib/meta";
 import { badgeBg, scholarships } from "../data/scholarships";
-import { alumni, procSteps } from "../data/content";
+import { procSteps } from "../data/content";
 import heroImg from "../assets/hero.jpg";
 
 export default function Home() {
@@ -33,10 +33,9 @@ export default function Home() {
 							</p>
 							<h1 className="hero-title">Study in China, fully funded</h1>
 							<p className="hero-lede">
-								We help Ugandan students win scholarships at accredited
-								universities in China, with tuition covered in full or in part.
-								You apply once, from Kampala, and we guide you through every
-								stage until you arrive on campus.
+								We help Ugandan students win scholarships at accredited Chinese
+								universities, with tuition covered in full or in part. You apply
+								once, from Kampala, and we guide you the whole way.
 							</p>
 							<div className="hero-ctas">
 								<button
@@ -130,44 +129,22 @@ export default function Home() {
 				</div>
 			</section>
 
-			{/* Student voices */}
-			<section className="section-tint">
-				<div className="container section-pad">
-					<p className="eyebrow-red">Student voices</p>
-					<h2 className="sec-title">From our alumni</h2>
-					<div className="voices-grid">
-						{alumni.map((a) => (
-							<div className="voice-card" key={a.name}>
-								<div className="voice-mark">“</div>
-								<p className="voice-quote">
-									{a.placeholder ? (
-										<span className="placeholder-copy">{a.quote}</span>
-									) : (
-										a.quote
-									)}
-								</p>
-								<div className="voice-person">
-									<span className="voice-avatar">{a.initials}</span>
-									<div>
-										<div className="voice-name">{a.name}</div>
-										<div className="voice-meta">{a.meta}</div>
-									</div>
-								</div>
-							</div>
-						))}
-					</div>
-				</div>
-			</section>
+			{/* Student voices — hidden until the students approve their quotes.
+			    The section markup lives in git history; `alumni` in
+			    src/data/content.ts holds the drafts. */}
 
-			{/* CTA band */}
-			<section className="cta-band">
+			{/* CTA band. Light rather than solid red: with Student Voices hidden the
+			    navy band above would otherwise run straight into red, and red is
+			    reserved for the action itself. Drop the `light` class to restore
+			    the original red band. */}
+			<section className="cta-band light">
 				<div className="cta-inner">
 					<h2 className="cta-title">Ready to study in China?</h2>
 					<p className="cta-p">
 						Applications for the 2026 intake are open. Spots are limited —
 						submit your details today.
 					</p>
-					<button className="btn-cta-white" onClick={() => navigate("/apply")}>
+					<button className="btn-cta-red" onClick={() => navigate("/apply")}>
 						Begin Your Application
 					</button>
 				</div>

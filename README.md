@@ -33,6 +33,22 @@ Note: this is a single-page app. When deploying, configure the host to serve
 - `src/pages/Admin.tsx` — the internal admin panel at `/admin`
 - `public/forms/` — downloadable blank forms (currently placeholders)
 
+## The generated Foreign Student Application Form
+
+Applicants do not download, print, fill in and scan the official form. They
+answer the questions online (steps 1–4 of the application) and the site builds
+the completed form as a PDF at submission time:
+
+- `src/data/applicationForm.ts` — **the single source of truth for every field.**
+  Add a field here and it appears in the form, the review screen, the generated
+  PDF, the admin panel and the CSV export automatically.
+- `src/lib/pdf.ts` — a small dependency-free PDF writer.
+- `src/lib/applicationPdf.ts` — lays the answers out as the official form.
+
+The generated PDF is stored with the applicant's other documents (so the office
+can preview and download it from `/admin`) and offered to the applicant on the
+confirmation screen.
+
 ## Supabase (forms backend + admin panel)
 
 Applications, uploaded documents and contact messages are stored in Supabase.
@@ -67,13 +83,22 @@ All of these are clearly marked in the code and, where visible, on the page:
 1. **Photos** — the home hero uses the prototype photo; every interior page hero
    shows a striped placeholder with a `PHOTO — …` badge naming the shot needed
    (campus, office, students with documents, etc.). Map placeholder on Contact.
-2. **Student testimonials** — three quote slots on the home page are marked
-   `[PLACEHOLDER …]`; names and universities are in `src/data/content.ts`.
+2. **Student testimonials — needs written consent before launch.** The names on
+   the home page (Janat Namugga, Patrick) are real students taken from the
+   admission letters. **The quotes are drafts written for them, not words they
+   said.** Each student must read and approve their own quote in writing before
+   this section goes live. Also still needed: Patrick's surname, and each
+   student's university and intake year. See `alumni` in `src/data/content.ts`,
+   where every entry carries `approved: false` until that is done.
 3. **Contact details** — phone number, WhatsApp number and email in
    `src/data/content.ts` are the prototype values; confirm before launch.
-4. **Blank downloadable forms** — the three PDFs in `public/forms/` are marked
-   placeholders; replace with the real application form, recommendation letter
-   and study plan templates, then re-zip as `StudyInChinaNow-blank-forms.zip`.
+4. **Blank downloadable forms** — the PDFs in `public/forms/` are marked
+   placeholders; replace with the real recommendation letter and study plan
+   templates, then re-zip as `StudyInChinaNow-blank-forms.zip`. The foreign
+   student application form is no longer downloaded: the site generates it (see
+   below), but the real form should still be checked against
+   `src/data/applicationForm.ts` so every field the universities ask for is
+   collected.
 5. **Form backends** — application and contact forms currently simulate success
    (`src/lib/submit.ts`); connect to a real endpoint.
 6. **Copy to confirm with the office** — service fee wording (FAQ "Are there any
