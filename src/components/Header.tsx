@@ -20,7 +20,7 @@ export default function Header() {
         <button className="brand" onClick={() => navigate('/')} aria-label="StudyInChinaNow home">
           <span className="brand-text">
             <span className="brand-name">StudyInChinaNow</span>
-            <span className="brand-sub">Study in China · Uganda</span>
+            <span className="brand-sub">Study in China · Africa</span>
           </span>
         </button>
         <nav className="site-nav" aria-label="Main navigation">

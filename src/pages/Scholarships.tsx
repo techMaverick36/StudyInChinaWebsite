@@ -29,7 +29,7 @@ export default function Scholarships() {
   const navigate = useNavigate()
   usePageMeta(
     'Available Scholarships | StudyInChinaNow',
-    'Scholarships for Ugandan students at Chinese universities for the September 2026 intake, with tuition covered in full or in part. Compare what each one covers and who can apply.',
+    'Scholarships for African students at Chinese universities for the September 2026 intake, with tuition covered in full or in part. Compare what each one covers and who can apply.',
   )
 
   /* Students look for a subject, not a scholarship name, so the majors are
@@ -130,6 +130,12 @@ export default function Scholarships() {
                   <td>English</td>
                   <td>English</td>
                   <td>English</td>
+                </tr>
+                <tr>
+                  <th scope="row">Open to</th>
+                  <td>Applicants across Africa</td>
+                  <td>Applicants across Africa</td>
+                  <td>Across Africa, apart from Morocco and Algeria</td>
                 </tr>
                 <tr>
                   <th scope="row">Majors</th>

@@ -8,7 +8,7 @@ export default function HowToApply() {
   const navigate = useNavigate()
   usePageMeta(
     'How to Apply | StudyInChinaNow',
-    'How to apply for a scholarship in China from Uganda: check you qualify, prepare your documents, and complete one online application. Four steps, about 15 minutes.',
+    'How to apply for a scholarship in China from Africa: check you qualify, prepare your documents, and complete one online application. Four steps, about 15 minutes.',
   )
 
   return (

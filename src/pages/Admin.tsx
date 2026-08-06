@@ -261,7 +261,7 @@ function AdminShell({
         <div className="page-hero-shade deep" />
         <div className="admin-hero-inner">
           <div>
-            <p className="eyebrow-hero">Internal</p>
+            <p className="eyebrow-hero ">Internal</p>
             <h1 className="admin-hero-title">Admin panel</h1>
           </div>
           {action}

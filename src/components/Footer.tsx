@@ -19,7 +19,7 @@ export default function Footer() {
             <span className="footer-brand-name">StudyInChinaNow</span>
           </div>
           <p className="footer-blurb">
-            A Kampala-based placement service helping Ugandan students study at
+            A placement service helping African students study at
             Chinese universities on scholarship.
           </p>
         </div>
@@ -51,7 +51,7 @@ export default function Footer() {
       </div>
       <div className="footer-bottom">
         <div className="footer-bottom-inner">
-          © 2026 StudyInChinaNow. A service of Enjosh Investments Limited, registered in Uganda.
+          © 2026 StudyInChinaNow. A service of Enjosh Investments Limited.
         </div>
       </div>
     </footer>

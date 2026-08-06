@@ -64,7 +64,7 @@ export const documents: DocItem[] = [
   { key: 'hs', name: 'High school certificate and transcript', instr: 'Certified copies.', adv: false },
   { key: 'degree', name: 'Degree transcript', instr: 'Your university transcript and certificate.', adv: true },
   { key: 'appform', name: 'Foreign student application form', instr: 'Answer the questions in the online application and the finished form is produced for you. Nothing to print or scan.', adv: false, generated: true },
-  { key: 'medical', name: 'Medical report', instr: 'From Naguru Hospital.', adv: false },
+  { key: 'medical', name: 'Medical report', instr: 'From an approved hospital. Applicants in Kampala use Naguru Hospital.', adv: false },
   { key: 'police', name: 'Interpol police clearance certificate', instr: 'Issued within the last 6 months.', adv: false },
   { key: 'english', name: 'English proficiency letter', instr: 'From your previous school.', adv: false },
   { key: 'csca', name: 'CSCA exam transcript', instr: 'Only for scholarships that require the CSCA exam.', adv: false, cscaOnly: true },
@@ -115,7 +115,7 @@ export const yourOwnCosts = [
   },
   {
     item: 'Student visa',
-    note: 'Paid at the Chinese embassy in Kampala. We prepare the paperwork with you.',
+    note: 'Paid at the Chinese embassy in your country. We prepare the paperwork with you.',
   },
   {
     item: 'Medical check and insurance',
@@ -140,7 +140,7 @@ export const yourOwnCosts = [
 export const faqs = [
   {
     q: 'Who is eligible to apply?',
-    a: 'Most of our applicants are Ugandans aged 18 to 35 who have finished high school or a first degree. Each scholarship has its own rules on age, grades and study level, so check the page for the one you want. If you are not sure, contact us and we will check for you at no charge.',
+    a: 'Most of our applicants are African students aged 18 to 35 who have finished high school or a first degree. Each scholarship has its own rules on age, grades and study level, so check the page for the one you want. If you are not sure, contact us and we will check for you at no charge.',
   },
   {
     q: 'What documents do I need?',

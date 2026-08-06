@@ -8,8 +8,8 @@ import HeroBackdrop from "../components/HeroBackdrop";
 export default function Home() {
 	const navigate = useNavigate();
 	usePageMeta(
-		"StudyInChinaNow | Scholarships in China for Ugandan Students",
-		"We help Ugandan students win scholarships at accredited Chinese universities, with tuition covered in full or in part. Kampala office, real people.",
+		"StudyInChinaNow | Scholarships in China for African Students",
+		"We help African students win scholarships at accredited Chinese universities, with tuition covered in full or in part. Kampala office, real people.",
 	);
 
 	const topScholarships = scholarships.slice(0, 3);
@@ -33,9 +33,9 @@ export default function Home() {
 							</p>
 							<h1 className="hero-title">Study in China, fully funded</h1>
 							<p className="hero-lede">
-								We help Ugandan students win scholarships at accredited Chinese
+								We help African students get scholarships at accredited Chinese
 								universities, with tuition covered in full or in part. You apply
-								once, from Kampala, and we guide you the whole way.
+								once, online, and we guide you the whole way.
 							</p>
 							<div className="hero-ctas">
 								<button
@@ -56,35 +56,14 @@ export default function Home() {
 				</div>
 			</section>
 
-			{/* The Process */}
-			<section style={{ background: "#fff" }}>
-				<div className="container section-pad">
-					<p className="eyebrow-red">The process</p>
-					<h2 className="sec-title">Four steps to enrollment</h2>
-					<div className="proc-grid">
-						{procSteps.map((g) => (
-							<div className="proc-cell" key={g.num}>
-								<div className="proc-num">{g.num}</div>
-								<h3 className="proc-title">{g.title}</h3>
-								<p className="proc-short">{g.short}</p>
-							</div>
-						))}
-					</div>
-					<div className="howto-cta-row">
-						<button className="btn-red-md" onClick={() => navigate("/apply")}>
-							Apply Now
-						</button>
-					</div>
-				</div>
-			</section>
-
-			{/* Open scholarships */}
-			<section className="section-navy">
+			{/* Open scholarships. Leads the page: what is on offer answers the
+			    visitor's first question before the process explains how to get it. */}
+			<section className="home-scholarships">
 				<div className="container section-pad">
 					<div className="navy-head">
 						<div>
 							<p className="eyebrow-gold">2026 intake</p>
-							<h2 className="sec-title-ondark">Open scholarships</h2>
+							<h2 className="sec-title">Open scholarships</h2>
 						</div>
 					</div>
 					<div className="sch-cards">
@@ -120,10 +99,33 @@ export default function Home() {
 					</div>
 					<div className="view-all-wrap">
 						<button
-							className="btn-outline-light"
+							className="btn-outline-navy"
 							onClick={() => navigate("/scholarships")}
 						>
 							View All Scholarships
+						</button>
+					</div>
+				</div>
+			</section>
+
+			{/* The Process. Follows the scholarships: once someone has seen what is
+			    on offer, this answers how to get it. */}
+			<section className="section-navy home-process">
+				<div className="container section-pad">
+					<p className="eyebrow-gold">The process</p>
+					<h2 className="sec-title-ondark proc-heading">Four steps to enrollment</h2>
+					<div className="proc-grid">
+						{procSteps.map((g) => (
+							<div className="proc-cell" key={g.num}>
+								<div className="proc-num">{g.num}</div>
+								<h3 className="proc-title">{g.title}</h3>
+								<p className="proc-short">{g.short}</p>
+							</div>
+						))}
+					</div>
+					<div className="howto-cta-row">
+						<button className="btn-red-md" onClick={() => navigate("/apply")}>
+							Apply Now
 						</button>
 					</div>
 				</div>

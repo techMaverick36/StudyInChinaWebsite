@@ -24,13 +24,21 @@ export interface Scholarship {
   fees: string
 }
 
-/* Status colours from the approved prototype. */
+/* Status colours.
+
+   "Open" uses the green already established elsewhere on the site for a good
+   state (the upload ticks, the confirmation screen, the WhatsApp button), so
+   open and closing read apart at a glance. Two tones each: the darker one for
+   light backgrounds, the lighter one for the navy hero. */
 export const statusColor = (s: ScholarshipStatus) =>
-  s === 'Open' ? '#8a6d2f' : '#a1471f'
+  s === 'Open' ? '#1f7a43' : '#a1471f'
 export const statusColorLight = (s: ScholarshipStatus) =>
-  s === 'Open' ? '#c7a85e' : '#e0975f'
+  s === 'Open' ? '#63c48c' : '#e0975f'
+/* "Closing soon" is a status, not an action. It used solid red, which competed
+   with the red buttons around it and blunted what red means on the page. Gold
+   carries urgency without claiming to be clickable. */
 export const badgeBg = (s: ScholarshipStatus) =>
-  s === 'Closing soon' ? '#c8102e' : '#33567a'
+  s === 'Closing soon' ? '#8a6d2f' : '#1f7a43'
 
 const serviceFees =
   'The scholarship itself is free. You never pay a university or the Chinese government to be considered, and you should treat anyone who asks as a scam. Our office charges a clearly stated service fee for placement and processing, explained in full before you commit to anything.'
@@ -78,7 +86,7 @@ export const scholarships: Scholarship[] = [
       { label: 'Intake', value: 'September 2026. Application deadline to be confirmed.' },
     ],
     eligibility: [
-      'Ugandan citizenship and a valid passport (at least three years to expiry).',
+      'A valid passport with at least three years to expiry.',
       'Completed high school with good grades.',
       'CSCA exam transcripts. A first-class result covers tuition in full; a second-class result covers half.',
       'Good conduct, confirmed by a police clearance certificate.',
@@ -125,7 +133,7 @@ export const scholarships: Scholarship[] = [
       { label: 'Intake', value: 'September 2026. Final places, last call.' },
     ],
     eligibility: [
-      'Ugandan citizenship and a valid passport (at least three years to expiry).',
+      'A valid passport with at least three years to expiry.',
       'Completed high school with good grades.',
       'CSCA exam and transcript.',
       'A study plan and the full document set listed on the Requirements page.',
@@ -158,7 +166,7 @@ export const scholarships: Scholarship[] = [
     about1:
       'This scholarship is for students who want to start without sitting the CSCA exam. All three majors are taught fully in English at a university in Hubei Province. The scholarship cuts tuition from 20,000 RMB to 7,000 RMB per year, and university accommodation is 3,000 RMB per year.',
     about2:
-      'Strong students can go further: the Hubei Provincial Government awards 20,000 RMB per year to excellent students, which more than covers the remaining costs. The programme is open to African students, so Ugandans qualify.',
+      'Strong students can go further: the Hubei Provincial Government awards 20,000 RMB per year to excellent students, which more than covers the remaining costs. The programme is open to applicants from across Africa, apart from Morocco and Algeria.',
     facts: [
       { label: 'Level', value: "Bachelor's" },
       { label: 'Location', value: 'Hubei Province' },
@@ -167,6 +175,10 @@ export const scholarships: Scholarship[] = [
         value: 'Tuition reduced from 20,000 to 7,000 RMB per year. Accommodation 3,000 RMB per year.',
       },
       { label: 'Exam', value: 'No CSCA exam needed' },
+      {
+        label: 'Countries',
+        value: 'Open across Africa, apart from Morocco and Algeria',
+      },
       { label: 'Language', value: 'All programmes taught in English' },
       {
         label: 'Majors',
@@ -180,7 +192,8 @@ export const scholarships: Scholarship[] = [
       { label: 'Intake', value: 'September 2026. Application deadline to be confirmed.' },
     ],
     eligibility: [
-      'Ugandan citizenship and a valid passport (at least three years to expiry). The programme is open to African students, so Ugandans qualify.',
+      'A valid passport with at least three years to expiry.',
+      'Open to applicants from African countries. Morocco and Algeria are not eligible for this programme.',
       'Completed high school with good grades.',
       'No CSCA exam needed.',
       'Comfortable studying fully in English.',

@@ -347,6 +347,63 @@ textarea:focus {
 .section-navy {
   background: #12283d;
 }
+/* ---- Home page bands ----
+   Open Scholarships sits on white and The Process on navy, so the page
+   alternates light and dark instead of stacking two dark blocks under the
+   hero. Each block's contents are re-toned for its background below. */
+
+.home-scholarships {
+  background: #fff;
+}
+.home-scholarships .eyebrow-gold {
+  /* Brand gold is too pale on white; this is the darker tone used for the
+     small labels on the contact cards. */
+  color: #8a6d2f;
+}
+.home-scholarships .sch-card {
+  background: #fff;
+  border: 1px solid #e2e7ec;
+  border-radius: 6px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.home-scholarships .sch-card:hover {
+  border-color: #16395c;
+  box-shadow: 0 3px 12px rgba(18, 40, 61, 0.08);
+}
+.home-scholarships .sch-card-title {
+  color: #16395c;
+}
+.home-scholarships .sch-card-loc,
+.home-scholarships .sch-card-close {
+  /* #7d8894 measured 3.61:1 on white, below the 4.5:1 minimum. */
+  color: #5c6b78;
+}
+.home-scholarships .sch-kv-k {
+  color: #8a6d2f;
+}
+.home-scholarships .sch-kv-v {
+  color: #42505c;
+}
+
+.home-process .proc-grid {
+  border-color: rgba(255, 255, 255, 0.14);
+}
+.home-process .proc-cell {
+  background: #12283d;
+  box-shadow: 0 0 0 0.5px rgba(255, 255, 255, 0.14);
+}
+.home-process .proc-num {
+  color: rgba(255, 255, 255, 0.17);
+}
+.home-process .proc-title {
+  color: #fff;
+}
+.home-process .proc-short {
+  color: #a9bac8;
+}
+.proc-heading {
+  margin-bottom: 44px;
+}
 .navy-head {
   display: flex;
   align-items: flex-end;
@@ -751,7 +808,8 @@ textarea:focus {
 }
 .scard-loc {
   font-size: 13px;
-  color: #8a96a1;
+  /* #8a96a1 measured 3.02:1 on white, well below the 4.5:1 minimum. */
+  color: #5c6b78;
   margin-bottom: 14px;
 }
 .scard-blurb {

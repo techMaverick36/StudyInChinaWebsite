@@ -14,7 +14,7 @@ export default function ScholarshipDetail() {
   usePageMeta(
     sel ? `${sel.title} | StudyInChinaNow` : 'Scholarship | StudyInChinaNow',
     sel
-      ? `${sel.title} for Ugandan students: ${sel.levels}. ${sel.location}. ${sel.closingLabel}. See what the award covers and how to apply.`
+      ? `${sel.title} for African students: ${sel.levels}. ${sel.location}. ${sel.closingLabel}. See what the award covers and how to apply.`
       : 'Scholarship details.',
   )
 

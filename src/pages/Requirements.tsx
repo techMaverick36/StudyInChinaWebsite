@@ -8,7 +8,7 @@ export default function Requirements() {
   const navigate = useNavigate()
   usePageMeta(
     'Required Documents | StudyInChinaNow',
-    'Every document you need to apply for a Chinese university scholarship from Uganda: passport, transcripts, medical report, Interpol clearance and more, with instructions for each.',
+    'Every document you need to apply for a Chinese university scholarship from Africa: passport, transcripts, medical report, Interpol clearance and more, with instructions for each.',
   )
 
   return (

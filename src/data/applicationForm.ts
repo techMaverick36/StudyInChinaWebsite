@@ -65,8 +65,8 @@ export const steps: StepDef[] = [
         fields: [
           { name: 'sex', label: 'Gender', type: 'select', options: ['Female', 'Male'] },
           { name: 'dob', label: 'Date of birth', type: 'date' },
-          { name: 'nationality', label: 'Nationality', placeholder: 'e.g. Ugandan' },
-          { name: 'countryOfBirth', label: 'Country of birth', placeholder: 'e.g. Uganda' },
+          { name: 'nationality', label: 'Nationality', placeholder: 'As shown on your passport' },
+          { name: 'countryOfBirth', label: 'Country of birth', placeholder: 'Country of birth' },
           { name: 'placeOfBirth', label: 'Place of birth (district or city)', placeholder: 'e.g. Jinja' },
           { name: 'maritalStatus', label: 'Marital status', type: 'select', options: ['Single', 'Married'] },
           { name: 'nativeLanguage', label: 'Native language', placeholder: 'e.g. English' },
@@ -125,7 +125,7 @@ export const steps: StepDef[] = [
       {
         title: 'How we reach you',
         fields: [
-          { name: 'phone', label: 'Phone number', type: 'tel', placeholder: '+256 7XX XXX XXX' },
+          { name: 'phone', label: 'Phone number', type: 'tel', placeholder: 'Include your country code' },
           { name: 'whatsapp', label: 'WhatsApp number (optional)', type: 'tel', optional: true, placeholder: 'If different from your phone' },
           { name: 'email', label: 'Email address', type: 'email', placeholder: 'you@example.com' },
           {
@@ -144,7 +144,7 @@ export const steps: StepDef[] = [
             name: 'addressContactPhone',
             label: 'Their telephone',
             type: 'tel',
-            placeholder: '+256 7XX XXX XXX',
+            placeholder: 'Include your country code',
           },
           {
             name: 'currentAddress',
@@ -197,7 +197,7 @@ export const steps: StepDef[] = [
         fields: [
           { name: 'guardian', label: 'Full name', placeholder: 'Full name' },
           { name: 'guardianRelationship', label: 'Relationship to you', placeholder: 'e.g. Mother, Uncle' },
-          { name: 'guardianPhone', label: 'Phone number', type: 'tel', placeholder: '+256 7XX XXX XXX' },
+          { name: 'guardianPhone', label: 'Phone number', type: 'tel', placeholder: 'Include your country code' },
           { name: 'guardianEmail', label: 'Email (optional)', type: 'email', optional: true, placeholder: 'If they have one' },
         ],
       },
@@ -216,7 +216,7 @@ export const steps: StepDef[] = [
           { name: 'sponsorName', label: 'Name of the person paying', placeholder: 'Write your own name if it is you' },
           { name: 'sponsorRelationship', label: 'Relationship to you', placeholder: 'e.g. Father, Self' },
           { name: 'sponsorOccupation', label: 'Their occupation (optional)', optional: true, placeholder: 'e.g. Farmer, Businessman' },
-          { name: 'sponsorPhone', label: 'Their phone number', type: 'tel', placeholder: '+256 7XX XXX XXX' },
+          { name: 'sponsorPhone', label: 'Their phone number', type: 'tel', placeholder: 'Include your country code' },
         ],
       },
     ],
@@ -319,7 +319,7 @@ export const steps: StepDef[] = [
               { name: 'referee1Name', label: 'Full name', placeholder: 'e.g. Dr. Okello James' },
               { name: 'referee1Position', label: 'Position', placeholder: 'e.g. Head of Department' },
               { name: 'referee1Institution', label: 'School or organisation', placeholder: 'Where they work' },
-              { name: 'referee1Phone', label: 'Phone number', type: 'tel', placeholder: '+256 7XX XXX XXX' },
+              { name: 'referee1Phone', label: 'Phone number', type: 'tel', placeholder: 'Include your country code' },
               { name: 'referee1Email', label: 'Email (optional)', type: 'email', optional: true, placeholder: 'If they have one' },
             ],
           },
@@ -329,7 +329,7 @@ export const steps: StepDef[] = [
               { name: 'referee2Name', label: 'Full name', placeholder: 'e.g. Mrs. Achieng Grace' },
               { name: 'referee2Position', label: 'Position', placeholder: 'e.g. Class teacher' },
               { name: 'referee2Institution', label: 'School or organisation', placeholder: 'Where they work' },
-              { name: 'referee2Phone', label: 'Phone number', type: 'tel', placeholder: '+256 7XX XXX XXX' },
+              { name: 'referee2Phone', label: 'Phone number', type: 'tel', placeholder: 'Include your country code' },
               { name: 'referee2Email', label: 'Email (optional)', type: 'email', optional: true, placeholder: 'If they have one' },
             ],
           },
@@ -371,12 +371,14 @@ export const emptyForm: Record<string, string> = Object.fromEntries(
   allFields.map((f) => [f.name, '']),
 )
 
-/* Sensible defaults for a Ugandan applicant; all remain editable. */
+/* Defaults that hold true for any applicant; all remain editable.
+
+   Nationality and country of birth are deliberately left blank. Applicants
+   come from across Africa, and a pre-filled country is exactly the kind of
+   field people leave uncorrected, which would put the wrong nationality on an
+   official application form. */
 export const formDefaults: Record<string, string> = {
   ...emptyForm,
-  nationality: 'Ugandan',
-  countryOfBirth: 'Uganda',
-  nativeLanguage: 'English',
   teachingMedium: 'English-taught',
   studiedInChina: 'No',
   appliedBefore: 'No',
