@@ -37,8 +37,6 @@ export const statusColorLight = (s: ScholarshipStatus) =>
 /* "Closing soon" is a status, not an action. It used solid red, which competed
    with the red buttons around it and blunted what red means on the page. Gold
    carries urgency without claiming to be clickable. */
-export const badgeBg = (s: ScholarshipStatus) =>
-  s === 'Closing soon' ? '#8a6d2f' : '#1f7a43'
 
 const serviceFees =
   'The scholarship itself is free. You never pay a university or the Chinese government to be considered, and you should treat anyone who asks as a scam. Our office charges a clearly stated service fee for placement and processing, explained in full before you commit to anything.'

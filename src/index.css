@@ -432,13 +432,10 @@ textarea:focus {
   gap: 12px;
   margin-bottom: 16px;
 }
-.sch-badge {
-  color: #fff;
-  font: 700 11.5px 'Inter', sans-serif;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  padding: 4px 9px;
-  border-radius: 2px;
+/* The home cards use the same quiet dot-and-label status as the scholarships
+   listing, so the two pages show the same information the same way. */
+.sch-card-top .scard-status {
+  margin-bottom: 0;
 }
 .sch-card-close {
   font-size: 13px;

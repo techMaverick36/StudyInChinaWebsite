@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { usePageMeta } from "../lib/meta";
-import { badgeBg, scholarships } from "../data/scholarships";
+import { scholarships, statusColor } from "../data/scholarships";
 import { procSteps } from "../data/content";
 import { photos, photoBlurs } from "../data/photos";
 import HeroBackdrop from "../components/HeroBackdrop";
@@ -70,11 +70,17 @@ export default function Home() {
 						{topScholarships.map((c) => (
 							<div className="sch-card" key={c.id}>
 								<div className="sch-card-top">
-									<span
-										className="sch-badge"
-										style={{ background: badgeBg(c.status) }}
-									>
-										{c.status}
+									<span className="scard-status">
+										<span
+											className="scard-dot"
+											style={{ background: statusColor(c.status) }}
+										/>
+										<span
+											className="scard-status-label"
+											style={{ color: statusColor(c.status) }}
+										>
+											{c.status}
+										</span>
 									</span>
 									<span className="sch-card-close">{c.closingLabel}</span>
 								</div>
