@@ -5,9 +5,14 @@ import { scholarships, statusColor } from '../data/scholarships'
 import { photos, photoBlurs } from '../data/photos'
 import { yourOwnCosts } from '../data/content'
 
-/* Short answer to "which one is for me", keyed off the CSCA exam and the
-   award, which are the two things that actually decide it. */
+/* Short answer to "which one is for me", keyed off study level, the CSCA exam
+   and the award, which are the things that actually decide it. */
 const chooseBy = [
+  {
+    id: 'henan-masters',
+    when: "You already hold a Bachelor's degree",
+    then: 'The Henan programme is the Master’s option, with 15 subjects and no entrance exam.',
+  },
   {
     id: 'hubei-english-taught',
     when: 'You have not sat the CSCA exam',
@@ -43,7 +48,8 @@ export default function Scholarships() {
   }
   const subjects = [...bySubject.entries()].sort((a, b) => a[0].localeCompare(b[0]))
 
-  const shortName = (title: string) => title.replace(/ Bachelor Scholarship$/, '')
+  const shortName = (title: string) =>
+    title.replace(/ (Bachelor|Master's) Scholarship$/, '')
 
   return (
     <>
@@ -89,7 +95,7 @@ export default function Scholarships() {
       <section className="section-tint">
         <div className="container section-pad">
           <p className="eyebrow-red">Side by side</p>
-          <h2 className="sec-title">Compare the three</h2>
+          <h2 className="sec-title">Compare the programmes</h2>
           <div className="compare-scroll">
             <table className="compare-table">
               <thead>
@@ -104,16 +110,22 @@ export default function Scholarships() {
               </thead>
               <tbody>
                 <tr>
+                  <th scope="row">Level</th>
+                  {scholarships.map((s) => (
+                    <td key={s.id}>{s.levels}</td>
+                  ))}
+                </tr>
+                <tr>
                   <th scope="row">Tuition</th>
-                  <td>Free with a first-class CSCA result, half with a second-class result</td>
-                  <td>Free for every admitted student</td>
-                  <td>7,000 RMB per year, reduced from 20,000</td>
+                  {scholarships.map((s) => (
+                    <td key={s.id}>{s.compare.tuition}</td>
+                  ))}
                 </tr>
                 <tr>
                   <th scope="row">Accommodation</th>
-                  <td>Paid by you</td>
-                  <td>Hostel fee 1,800 RMB per year</td>
-                  <td>3,000 RMB per year</td>
+                  {scholarships.map((s) => (
+                    <td key={s.id}>{s.compare.accommodation}</td>
+                  ))}
                 </tr>
                 <tr>
                   <th scope="row">CSCA exam</th>
@@ -127,15 +139,15 @@ export default function Scholarships() {
                 </tr>
                 <tr>
                   <th scope="row">Taught in</th>
-                  <td>English</td>
-                  <td>English</td>
-                  <td>English</td>
+                  {scholarships.map((s) => (
+                    <td key={s.id}>{s.compare.taughtIn}</td>
+                  ))}
                 </tr>
                 <tr>
                   <th scope="row">Open to</th>
-                  <td>Applicants across Africa</td>
-                  <td>Applicants across Africa</td>
-                  <td>Across Africa, apart from Morocco and Algeria</td>
+                  {scholarships.map((s) => (
+                    <td key={s.id}>{s.compare.openTo}</td>
+                  ))}
                 </tr>
                 <tr>
                   <th scope="row">Majors</th>
@@ -145,9 +157,9 @@ export default function Scholarships() {
                 </tr>
                 <tr>
                   <th scope="row">Extra award</th>
-                  <td>None</td>
-                  <td>None</td>
-                  <td>Hubei provincial award of 20,000 RMB a year for strong students</td>
+                  {scholarships.map((s) => (
+                    <td key={s.id}>{s.compare.extraAward}</td>
+                  ))}
                 </tr>
                 <tr>
                   <th scope="row">Intake</th>

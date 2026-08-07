@@ -436,6 +436,19 @@ textarea:focus {
    listing, so the two pages show the same information the same way. */
 .sch-card-top .scard-status {
   margin-bottom: 0;
+  flex-shrink: 0;
+}
+.sch-card-top .scard-status-label {
+  white-space: nowrap;
+}
+/* Longer statuses push the date onto a second line. Reserving the taller row
+   for every card keeps the titles on one line across the row. */
+.sch-card-top {
+  min-height: 32px;
+  align-items: flex-start;
+}
+.sch-card-top .sch-card-close {
+  text-align: right;
 }
 .sch-card-close {
   font-size: 13px;

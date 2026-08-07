@@ -14,6 +14,15 @@ export interface Scholarship {
   closingKV: string
   cscaRequired: boolean
   majors: string[]
+  /* One row each in the comparison table on the scholarships page. Keeping
+     them here means adding a scholarship fills the table by itself. */
+  compare: {
+    tuition: string
+    accommodation: string
+    taughtIn: string
+    openTo: string
+    extraAward: string
+  }
   blurb: string
   about1: string
   about2: string
@@ -61,6 +70,13 @@ export const scholarships: Scholarship[] = [
       'Pharmacy',
       'Clinical Medicine (self-funded)',
     ],
+    compare: {
+      tuition: 'Free with a first-class CSCA result, half with a second-class result',
+      accommodation: 'Paid by you',
+      taughtIn: 'English',
+      openTo: 'Applicants across Africa',
+      extraAward: 'None',
+    },
     blurb:
       'Study at a top-ranking Chinese university. A first-class CSCA result covers your tuition in full. A second-class result covers half.',
     about1:
@@ -112,6 +128,13 @@ export const scholarships: Scholarship[] = [
       'Aircraft Design and Engineering',
       'Computer Science and Technology',
     ],
+    compare: {
+      tuition: 'Free for every admitted student',
+      accommodation: 'Hostel fee 1,800 RMB per year',
+      taughtIn: 'English',
+      openTo: 'Applicants across Africa',
+      extraAward: 'None',
+    },
     blurb:
       'Tuition fully covered for all admitted students. You pay only the hostel fee of 1,800 RMB per year. Final places for September 2026.',
     about1:
@@ -159,6 +182,13 @@ export const scholarships: Scholarship[] = [
       'International Economics',
       'International Chinese Education',
     ],
+    compare: {
+      tuition: '7,000 RMB per year, reduced from 20,000',
+      accommodation: '3,000 RMB per year',
+      taughtIn: 'English',
+      openTo: 'Across Africa, apart from Morocco and Algeria',
+      extraAward: 'Hubei provincial award of 20,000 RMB a year for strong students',
+    },
     blurb:
       'English-taught programmes in Hubei with no CSCA exam. Tuition drops from 20,000 to 7,000 RMB per year, and top students can win a 20,000 RMB provincial award.',
     about1:
@@ -201,6 +231,81 @@ export const scholarships: Scholarship[] = [
       'The scholarship cuts tuition from 20,000 RMB to 7,000 RMB per year, and university accommodation is 3,000 RMB per year. Excellent students can also apply for the Hubei Provincial Government award of 20,000 RMB per year, which more than covers those costs. The provincial award is assessed on your results each year, so strong students keep earning it.',
     timeline:
       'The intake is September 2026 and the application deadline is being confirmed. Because there is no CSCA exam, your file can be ready quickly once your documents are in order. The provincial award is applied for after you enrol, and we guide you through it.',
+    fees: serviceFees,
+  },
+  {
+    id: 'henan-masters',
+    title: "Henan Province Master's Scholarship",
+    levels: "Master's",
+    levelKeys: ['masters'],
+    location: 'Henan Province',
+    status: 'Open',
+    closingLabel: 'Sep 2026 intake',
+    closingKV: 'To be confirmed',
+    cscaRequired: false,
+    majors: [
+      'Master of International Business (MIB)',
+      'Electronic Information (Computer Science and Technology)',
+      'Civil and Hydraulic Engineering',
+      'Biology and Medicine',
+      'Applied Statistics',
+      'Physical Education',
+      'Materials and Chemical Engineering',
+      'Resources and Environment',
+      'Agronomy',
+      'Education',
+      'Chinese Language and Literature',
+      'History of China',
+      'Physics',
+      'Chemistry',
+      'Translation',
+    ],
+    compare: {
+      tuition: 'Free, 3,000 or 5,000 RMB per year by award type. Full fee is 18,000 RMB',
+      accommodation: '3,500 RMB per year',
+      /* [PLACEHOLDER] Confirm which programmes are taught in English. Several
+         listed majors (Chinese Language and Literature, History of China,
+         Translation) are likely taught in Chinese. */
+      taughtIn: 'To be confirmed by programme',
+      openTo: 'International students worldwide',
+      extraAward: 'None',
+    },
+    blurb:
+      "For students who already hold a Bachelor's degree. Fifteen Master's programmes in Henan, with tuition free or reduced depending on the award you are given.",
+    about1:
+      "This is a Master's scholarship at a university in Henan Province for the September 2026 intake. Fifteen programmes are open, from International Business and Electronic Information to Civil and Hydraulic Engineering, Agronomy, Education and Translation. Applications are welcome from international students worldwide.",
+    about2:
+      'The award comes in three types. Type 1 covers your tuition in full. Type 2 leaves you paying 3,000 RMB a year and Type 3 leaves you paying 5,000 RMB a year, against a full fee of 18,000 RMB. You are told which type you have been given before you accept a place.',
+    facts: [
+      { label: 'Level', value: "Master's" },
+      { label: 'Location', value: 'Henan Province' },
+      {
+        label: 'Award',
+        value:
+          'Type 1: tuition free · Type 2: 3,000 RMB per year · Type 3: 5,000 RMB per year (full fee 18,000 RMB)',
+      },
+      { label: 'Accommodation', value: '3,500 RMB per year' },
+      { label: 'Exam', value: 'No CSCA exam needed' },
+      { label: 'Countries', value: 'Open to international students worldwide' },
+      {
+        label: 'Majors',
+        value:
+          'International Business · Electronic Information · Civil and Hydraulic Engineering · Biology and Medicine · Applied Statistics · Physical Education · Materials and Chemical Engineering · Resources and Environment · Agronomy · Education · Chinese Language and Literature · History of China · Physics · Chemistry · Translation',
+      },
+      { label: 'Intake', value: 'September 2026. Application deadline to be confirmed.' },
+    ],
+    eligibility: [
+      "A completed Bachelor's degree, with the certificate and academic transcript.",
+      'A valid passport with at least three years to expiry.',
+      'A research proposal for the programme you are applying to.',
+      'Two recommendation letters, each from an associate professor or professor.',
+      'A police clearance certificate issued within the last 6 months.',
+      'A medical examination report issued within the last 6 months.',
+    ],
+    funding:
+      'Tuition is 18,000 RMB per year before the award. Type 1 covers it in full, Type 2 leaves you paying 3,000 RMB a year, and Type 3 leaves you paying 5,000 RMB a year. Accommodation is 3,500 RMB per year and is paid by you. We confirm which award type you have been offered before you accept.',
+    timeline:
+      'The intake is September 2026 and the application deadline is being confirmed. Two documents take the longest here: the police clearance and the medical report, and both must be issued within 6 months of applying. Start them early and prepare your research proposal while you wait.',
     fees: serviceFees,
   },
 ]
