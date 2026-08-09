@@ -5,6 +5,8 @@ import { usePageMeta } from '../lib/meta'
 import { FILES_BUCKET, supabase } from '../lib/supabase'
 import { fieldLabels } from '../data/applicationForm'
 import type { EducationRow, EmploymentRow } from '../data/applicationForm'
+import { documents } from '../data/content'
+import { safeFileName, zipSync } from '../lib/zip'
 
 /* Internal admin panel (not linked from the public navigation, reached at
    /admin). Requires a Supabase login; accounts are created by invitation
@@ -406,6 +408,8 @@ function Dashboard() {
   const [purging, setPurging] = useState(false)
   /* Which document is open in the overlay viewer. */
   const [viewer, setViewer] = useState<{ appId: string; index: number } | null>(null)
+  /* Application id currently being packaged into a zip, and its progress. */
+  const [zipping, setZipping] = useState<{ id: string; done: number; total: number } | null>(null)
 
   const load = useCallback(async () => {
     if (!supabase) return
@@ -527,6 +531,107 @@ function Dashboard() {
       return Array.isArray(parsed) ? (parsed as EmploymentRow[]).filter((e) => e?.employer) : []
     } catch {
       return []
+    }
+  }
+
+  /* Plain-text summary of the application, so the zip can be forwarded to a
+     university on its own without opening the admin panel. */
+  const summaryText = (r: AppRow): string => {
+    const lines: string[] = []
+    const name = applicantName(r.form)
+    lines.push(name)
+    lines.push('='.repeat(name.length))
+    lines.push('')
+    lines.push(`Scholarship:  ${r.scholarship_title}`)
+    lines.push(`Study level:  ${r.level}`)
+    lines.push(`Status:       ${r.status}`)
+    lines.push(`Submitted:    ${fmtDate(r.created_at)}`)
+    lines.push('')
+    for (const [key, label] of Object.entries(FORM_LABELS)) {
+      const v = r.form?.[key]?.trim()
+      if (v) lines.push(`${(label + ':').padEnd(34)}${v}`)
+    }
+    const edu = educationOf(r)
+    if (edu.length) {
+      lines.push('', 'Education history', '-----------------')
+      edu.forEach((e) =>
+        lines.push(
+          `  ${[e.school, [e.from, e.to].filter(Boolean).join(' to '), e.qualification, e.grades].filter(Boolean).join(' | ')}`,
+        ),
+      )
+    }
+    const emp = employmentOf(r)
+    if (emp.length) {
+      lines.push('', 'Employment record', '-----------------')
+      emp.forEach((e) =>
+        lines.push(
+          `  ${[e.employer, [e.from, e.to].filter(Boolean).join(' to '), e.post].filter(Boolean).join(' | ')}`,
+        ),
+      )
+    }
+    const links = Object.values(r.uploads ?? {}).filter((u) => u.link)
+    if (links.length) {
+      lines.push('', 'Links supplied', '--------------')
+      links.forEach((u) => lines.push(`  ${u.link}`))
+    }
+    const missing = r.form?.documentsNotReceived
+    if (missing) {
+      lines.push('', 'Documents the applicant reported but that did not upload', '-------------------------------------------------------')
+      lines.push(`  ${missing}`)
+    }
+    return lines.join('\r\n')
+  }
+
+  /* Everything for one applicant in a single zip: their documents, the
+     generated application form and a summary of their answers. */
+  const downloadAll = async (r: AppRow) => {
+    if (!supabase || zipping) return
+    const files = docsOf(r).filter((d) => d.path)
+    setZipping({ id: r.id, done: 0, total: files.length })
+
+    const entries: { name: string; data: Uint8Array }[] = []
+    const failed: string[] = []
+    const folder = safeFileName(`${applicantName(r.form)} - ${r.scholarship_title}`)
+
+    for (let i = 0; i < files.length; i++) {
+      const doc = files[i]
+      try {
+        const url = await signedUrl(doc.path!)
+        if (!url) throw new Error('no signed url')
+        const res = await fetch(url)
+        if (!res.ok) throw new Error(String(res.status))
+        const bytes = new Uint8Array(await res.arrayBuffer())
+        const label = documents.find((d) => d.key === doc.key)?.name ?? doc.key
+        const num = String(i + 1).padStart(2, '0')
+        entries.push({
+          name: `${folder}/${safeFileName(`${num} ${label} - ${doc.name}`)}`,
+          data: bytes,
+        })
+      } catch (err) {
+        console.error(`Could not add ${doc.name} to the zip:`, err)
+        failed.push(doc.name)
+      }
+      setZipping({ id: r.id, done: i + 1, total: files.length })
+    }
+
+    const enc = new TextEncoder()
+    entries.push({
+      name: `${folder}/APPLICATION SUMMARY.txt`,
+      data: enc.encode(summaryText(r)),
+    })
+
+    const blob = zipSync(entries)
+    const a = document.createElement('a')
+    a.href = URL.createObjectURL(blob)
+    a.download = `${folder}.zip`
+    a.click()
+    URL.revokeObjectURL(a.href)
+    setZipping(null)
+
+    if (failed.length) {
+      setLoadError(
+        `The zip was created, but ${failed.length} file${failed.length === 1 ? '' : 's'} could not be added: ${failed.join(', ')}.`,
+      )
     }
   }
 
@@ -714,7 +819,20 @@ function Dashboard() {
                           </div>
                         </>
                       )}
-                      <h3 className="admin-sub">Documents</h3>
+                      <div className="admin-docs-head">
+                        <h3 className="admin-sub">Documents</h3>
+                        {docsOf(r).some((d) => d.path) && (
+                          <button
+                            className="btn-outline-navy admin-btn-sm"
+                            onClick={() => void downloadAll(r)}
+                            disabled={!!zipping}
+                          >
+                            {zipping?.id === r.id
+                              ? `Preparing ${zipping.done} of ${zipping.total}…`
+                              : 'Download all as ZIP'}
+                          </button>
+                        )}
+                      </div>
                       {Object.keys(r.uploads ?? {}).length === 0 ? (
                         <p className="admin-empty">No documents uploaded.</p>
                       ) : (
