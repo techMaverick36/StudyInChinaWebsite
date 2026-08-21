@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { usePageMeta } from '../lib/meta'
-import { getScholarship, statusColorLight } from '../data/scholarships'
+import { statusColorLight } from '../data/scholarships'
+import { useScholarship, useScholarshipStore } from '../lib/scholarshipStore'
 import { photos, photoBlurs } from '../data/photos'
 import HeroBackdrop from '../components/HeroBackdrop'
 
@@ -9,7 +10,8 @@ export default function ScholarshipDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
   const [detailsOpen, setDetailsOpen] = useState(false)
-  const sel = getScholarship(id)
+  const { loading } = useScholarshipStore()
+  const sel = useScholarship(id)
 
   usePageMeta(
     sel ? `${sel.title} | StudyInChinaNow` : 'Scholarship | StudyInChinaNow',
@@ -18,7 +20,9 @@ export default function ScholarshipDetail() {
       : 'Scholarship details.',
   )
 
-  if (!sel) return <Navigate to="/scholarships" replace />
+  /* On a cold load of a deep link the saved programmes have not arrived yet, so
+     an unknown id is only really unknown once the load has settled. */
+  if (!sel) return loading ? <div className="body-pad" /> : <Navigate to="/scholarships" replace />
 
   const dotColor = statusColorLight(sel.status)
 

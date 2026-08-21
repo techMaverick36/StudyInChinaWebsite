@@ -27,7 +27,9 @@ Note: this is a single-page app. When deploying, configure the host to serve
 ## Where things live
 
 - `src/pages/` — one file per page (Home, Scholarships, ScholarshipDetail, HowToApply, Requirements, Contact, Apply, Admin)
-- `src/data/scholarships.ts` — the scholarship programmes' copy and facts
+- `src/data/scholarships.ts` — the built-in scholarship programmes (the fallback; see below)
+- `src/lib/scholarshipStore.ts` — loads the saved programmes from Supabase, falling back to the built-in list
+- `src/pages/AdminScholarships.tsx` — the Scholarships tab of the admin panel
 - `src/data/content.ts` — contact details, FAQ, document list, process steps, testimonials
 - `src/lib/submit.ts` — saves applications and contact messages to Supabase (simulates success when Supabase is not configured)
 - `src/pages/Admin.tsx` — the internal admin panel at `/admin`
@@ -49,12 +51,34 @@ The generated PDF is stored with the applicant's other documents (so the office
 can preview and download it from `/admin`) and offered to the applicant on the
 confirmation screen.
 
+## Scholarships are edited by the office, not in the code
+
+The programmes on the public site come from the `scholarships` table in
+Supabase, edited from the **Scholarships** tab at `/admin`: add, edit, reorder,
+publish, unpublish and delete. Nothing needs a deploy.
+
+The list in `src/data/scholarships.ts` is the **fallback**. It is what visitors
+see when Supabase is not configured, the query fails, or no programmes have been
+saved yet, so the scholarships page is never blank. While the table is empty the
+Scholarships tab offers a one-click "Copy the built-in programmes in", which
+writes that list into the database as a starting point to edit.
+
+Two things stay in the code because they are copy, not data: the "Choosing
+between them" shortcuts on the scholarships page (`src/pages/Scholarships.tsx`,
+which quietly drop any programme that no longer exists) and the document list on
+the Requirements page (`src/data/content.ts`).
+
+A programme's web address (`/scholarships/<id>`) is its database id. Changing it
+breaks links already sent to students, so the editor warns before you do.
+Deleting a programme does not touch applications already submitted for it — the
+application stores the scholarship title as text.
+
 ## Supabase (forms backend + admin panel)
 
-Applications, uploaded documents and contact messages are stored in Supabase.
-The admin panel at `/admin` (not linked from the public navigation) lets the
-client review applications, download documents, set statuses, export CSV and
-read contact messages.
+Applications, uploaded documents, contact messages and the scholarship
+programmes are stored in Supabase. The admin panel at `/admin` (not linked from
+the public navigation) lets the client review applications, download documents,
+set statuses, export CSV, read contact messages and manage the scholarships.
 
 One-time setup:
 
@@ -62,9 +86,14 @@ One-time setup:
 2. Copy `.env.example` to `.env.local` and fill in the Project URL and the
    publishable (anon) key from Project Settings → API keys. Restart `npm run dev`.
 3. Run `supabase/setup.sql` in the dashboard (SQL Editor → paste → Run). This
-   creates the two tables, the private `application-files` storage bucket, and
-   the row level security policies (public may only submit; only signed-in
-   admins may read).
+   creates the three tables (`applications`, `contact_messages`,
+   `scholarships`), the private `application-files` storage bucket, and the row
+   level security policies (public may only submit applications and read
+   published scholarships; only signed-in admins may read the rest or make
+   changes). Until this is run, the site shows the built-in programmes and the
+   Scholarships tab says so. On a project set up before the scholarships table
+   existed, run `supabase/add-scholarships.sql` instead — it adds just that
+   table and can be run more than once safely.
 4. Authentication → Sign In / Up: **disable public sign-ups** so nobody can
    self-register.
 5. Authentication → URL Configuration: set the Site URL to the production
@@ -104,10 +133,13 @@ All of these are clearly marked in the code and, where visible, on the page:
 6. **Copy to confirm with the office** — service fee wording (FAQ "Are there any
    fees?" and each scholarship's Fees paragraph), and response time promises
    ("within three working days").
-7. **Scholarship details to confirm** — the three programmes come from the
-   partner flyers (Sep 2026 intake). Still needed: exact application deadlines
-   (labelled "to be confirmed" on the site), the university names for the
-   top-ranking and tuition-free programmes, and whether a study plan is
-   required for Bachelor's applicants (flyer 2 lists it; the Requirements page
-   currently marks it Master's & PhD only).
+7. **Scholarship details to confirm** — the eight built-in programmes come from
+   the partner flyers (Sep 2026 intake). Still needed: exact application
+   deadlines (labelled "to be confirmed" on the site), the university names for
+   the top-ranking, tuition-free and two Shenyang programmes (the two Shenyang
+   Chinese language ones are at different universities and are currently told
+   apart by their fees only), the language of instruction on the Henan Master's
+   programmes, and whether a study plan is required for Bachelor's applicants
+   (flyer 2 lists it; the Requirements page currently marks it Master's & PhD
+   only). Once the table is populated these are edited at `/admin`, not here.
 7. **Favicon** — a simple placeholder in brand colours; replace with the real mark.

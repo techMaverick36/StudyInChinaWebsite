@@ -123,7 +123,7 @@ export const yourOwnCosts = [
   },
   {
     item: 'Accommodation',
-    note: 'Covered on some programmes. Where it is not, expect 1,800 to 3,000 RMB per year.',
+    note: 'Covered on some programmes. Where it is not, expect 1,800 to 5,400 RMB per year, or 600 to 900 RMB a month where you live off campus.',
   },
   {
     item: 'Food and day to day living',

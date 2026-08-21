@@ -1,7 +1,8 @@
 import { useNavigate } from 'react-router-dom'
 import { usePageMeta } from '../lib/meta'
 import PageHero from '../components/PageHero'
-import { scholarships, statusColor } from '../data/scholarships'
+import { statusColor } from '../data/scholarships'
+import { useScholarships } from '../lib/scholarshipStore'
 import { photos, photoBlurs } from '../data/photos'
 import { yourOwnCosts } from '../data/content'
 
@@ -28,14 +29,33 @@ const chooseBy = [
     when: 'You want tuition covered whatever your result',
     then: 'The tuition-free programme covers every admitted student. Places close first.',
   },
+  {
+    id: 'beijing-chinese-language',
+    when: 'You want to learn Chinese first',
+    then: 'The Beijing language course runs a year and costs 5,000 RMB after the scholarship.',
+  },
+  {
+    id: 'shijiazhuang-language-csca',
+    when: 'You want to prepare for the CSCA in China',
+    then: 'Shijiazhuang pairs Chinese language with CSCA preparation, or with Traditional Chinese Medicine.',
+  },
 ]
 
 export default function Scholarships() {
   const navigate = useNavigate()
+  const scholarships = useScholarships()
   usePageMeta(
     'Available Scholarships | StudyInChinaNow',
     'Scholarships for African students at Chinese universities for the September 2026 intake, with tuition covered in full or in part. Compare what each one covers and who can apply.',
   )
+
+  const shortName = (s: { title: string; shortTitle?: string }) =>
+    s.shortTitle ?? s.title.replace(/ (Bachelor|Master's) Scholarship$/, '')
+
+  /* The shortcuts below are written against particular programmes. Once the
+     office edits the list at /admin one of them may no longer exist, so only
+     the ones that still point somewhere are shown. */
+  const shortcuts = chooseBy.filter((c) => scholarships.some((s) => s.id === c.id))
 
   /* Students look for a subject, not a scholarship name, so the majors are
      indexed the way they search. */
@@ -43,13 +63,10 @@ export default function Scholarships() {
   for (const s of scholarships) {
     for (const m of s.majors) {
       const key = m.replace(/\s*\(self-funded\)$/, '')
-      bySubject.set(key, [...(bySubject.get(key) ?? []), s.title])
+      bySubject.set(key, [...(bySubject.get(key) ?? []), shortName(s)])
     }
   }
   const subjects = [...bySubject.entries()].sort((a, b) => a[0].localeCompare(b[0]))
-
-  const shortName = (title: string) =>
-    title.replace(/ (Bachelor|Master's) Scholarship$/, '')
 
   return (
     <>
@@ -103,7 +120,7 @@ export default function Scholarships() {
                   <th scope="col">&nbsp;</th>
                   {scholarships.map((s) => (
                     <th scope="col" key={s.id}>
-                      {shortName(s.title)}
+                      {shortName(s)}
                     </th>
                   ))}
                 </tr>
@@ -184,19 +201,23 @@ export default function Scholarships() {
             </table>
           </div>
 
-          <h3 className="choose-h">Choosing between them</h3>
-          <div className="choose-grid">
-            {chooseBy.map((c) => (
-              <button
-                className="choose-card"
-                key={c.id}
-                onClick={() => navigate(`/scholarships/${c.id}`)}
-              >
-                <span className="choose-when">{c.when}</span>
-                <span className="choose-then">{c.then}</span>
-              </button>
-            ))}
-          </div>
+          {shortcuts.length > 0 && (
+            <>
+              <h3 className="choose-h">Choosing between them</h3>
+              <div className="choose-grid">
+                {shortcuts.map((c) => (
+                  <button
+                    className="choose-card"
+                    key={c.id}
+                    onClick={() => navigate(`/scholarships/${c.id}`)}
+                  >
+                    <span className="choose-when">{c.when}</span>
+                    <span className="choose-then">{c.then}</span>
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
         </div>
       </section>
 
@@ -210,19 +231,21 @@ export default function Scholarships() {
               <div className="subject-row" key={subject}>
                 <div className="subject-name">{subject}</div>
                 <div className="subject-where">
-                  {offered.map((title) => (
-                    <span className="subject-chip" key={title}>
-                      {shortName(title)}
+                  {offered.map((name) => (
+                    <span className="subject-chip" key={name}>
+                      {name}
                     </span>
                   ))}
                 </div>
               </div>
             ))}
           </div>
-          <p className="subject-note">
-            Clinical Medicine is offered at the top-ranking university but is self-funded, so
-            tuition is not covered.
-          </p>
+          {scholarships.some((s) => s.majors.some((m) => /\(self-funded\)$/.test(m))) && (
+            <p className="subject-note">
+              Subjects marked self-funded are offered at the same university, but tuition is
+              not covered.
+            </p>
+          )}
         </div>
       </section>
 

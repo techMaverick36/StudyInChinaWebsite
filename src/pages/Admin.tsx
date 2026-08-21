@@ -7,6 +7,7 @@ import { fieldLabels } from '../data/applicationForm'
 import type { EducationRow, EmploymentRow } from '../data/applicationForm'
 import { documents } from '../data/content'
 import { safeFileName, zipSync } from '../lib/zip'
+import AdminScholarships from './AdminScholarships'
 
 /* Internal admin panel (not linked from the public navigation, reached at
    /admin). Requires a Supabase login; accounts are created by invitation
@@ -392,9 +393,9 @@ function Login() {
 }
 
 function Dashboard() {
-  const [tab, setTab] = useState<'applications' | 'messages' | 'trash' | 'account'>(
-    'applications',
-  )
+  const [tab, setTab] = useState<
+    'applications' | 'messages' | 'scholarships' | 'trash' | 'account'
+  >('applications')
   const [apps, setApps] = useState<AppRow[]>([])
   const [msgs, setMsgs] = useState<MsgRow[]>([])
   const [loading, setLoading] = useState(true)
@@ -718,6 +719,12 @@ function Dashboard() {
           Messages ({msgs.filter((m) => !m.handled).length} new)
         </button>
         <button
+          className={`admin-tab${tab === 'scholarships' ? ' active' : ''}`}
+          onClick={() => setTab('scholarships')}
+        >
+          Scholarships
+        </button>
+        <button
           className={`admin-tab${tab === 'trash' ? ' active' : ''}`}
           onClick={() => setTab('trash')}
         >
@@ -1029,6 +1036,8 @@ function Dashboard() {
           )}
         </div>
       )}
+
+      {tab === 'scholarships' && <AdminScholarships />}
 
       {tab === 'account' && <AccountPanel />}
 

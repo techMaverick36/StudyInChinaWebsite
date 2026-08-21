@@ -10,6 +10,7 @@ import Requirements from './pages/Requirements'
 import Contact from './pages/Contact'
 import Apply from './pages/Apply'
 import Admin from './pages/Admin'
+import { ScholarshipsProvider } from './lib/ScholarshipsProvider'
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -21,7 +22,7 @@ function ScrollToTop() {
 
 function App() {
   return (
-    <>
+    <ScholarshipsProvider>
       <ScrollToTop />
       <Header />
       <main>
@@ -38,7 +39,7 @@ function App() {
         </Routes>
       </main>
       <Footer />
-    </>
+    </ScholarshipsProvider>
   )
 }
 

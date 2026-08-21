@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { usePageMeta } from "../lib/meta";
-import { scholarships, statusColor } from "../data/scholarships";
+import { statusColor } from "../data/scholarships";
+import { useScholarships } from "../lib/scholarshipStore";
 import { procSteps } from "../data/content";
 import { photos, photoBlurs } from "../data/photos";
 import HeroBackdrop from "../components/HeroBackdrop";
@@ -12,7 +13,7 @@ export default function Home() {
 		"We help African students win scholarships at accredited Chinese universities, with tuition covered in full or in part. Kampala office, real people.",
 	);
 
-	const topScholarships = scholarships.slice(0, 3);
+	const topScholarships = useScholarships().slice(0, 3);
 
 	return (
 		<div>
@@ -35,7 +36,7 @@ export default function Home() {
 							<p className="hero-lede">
 								We help African students get scholarships at accredited Chinese
 								universities, with tuition covered in full or in part. You apply
-								once, online, and we guide you the whole way.
+								once, offline, and we guide you the whole way.
 							</p>
 							<div className="hero-ctas">
 								<button

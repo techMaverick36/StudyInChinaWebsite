@@ -1,9 +1,12 @@
 export type ScholarshipStatus = 'Open' | 'Closing soon'
-export type LevelKey = 'bachelor' | 'masters' | 'phd'
+export type LevelKey = 'bachelor' | 'masters' | 'phd' | 'language'
 
 export interface Scholarship {
   id: string
   title: string
+  /* Column heading in the comparison table, where the full title is too long to
+     read. Falls back to the title with its level suffix stripped. */
+  shortTitle?: string
   levels: string
   levelKeys: LevelKey[]
   location: string
@@ -47,12 +50,21 @@ export const statusColorLight = (s: ScholarshipStatus) =>
    with the red buttons around it and blunted what red means on the page. Gold
    carries urgency without claiming to be clickable. */
 
-const serviceFees =
+/* The same wording on every programme, and the starting point for a new one
+   added from the admin panel. */
+export const serviceFees =
   'The scholarship itself is free. You never pay a university or the Chinese government to be considered, and you should treat anyone who asks as a scam. Our office charges a clearly stated service fee for placement and processing, explained in full before you commit to anything.'
 
-/* [PLACEHOLDER] University names and exact application deadlines are still to be
+/* The programmes below are the built-in set. They are the fallback the site
+   shows when Supabase is not configured, is unreachable, or has no scholarships
+   saved yet, so the scholarships page is never blank. Once the office adds or
+   edits programmes at /admin, the saved ones are used instead and this list is
+   no longer what visitors see. The Scholarships tab in the admin panel can copy
+   this list into the database as a starting point.
+
+   [PLACEHOLDER] University names and exact application deadlines are still to be
    confirmed by the office; the flyers state the September 2026 intake only. */
-export const scholarships: Scholarship[] = [
+export const seedScholarships: Scholarship[] = [
   {
     id: 'top-ranking-bachelor',
     title: 'Top-Ranking University Bachelor Scholarship',
@@ -308,7 +320,232 @@ export const scholarships: Scholarship[] = [
       'The intake is September 2026 and the application deadline is being confirmed. Two documents take the longest here: the police clearance and the medical report, and both must be issued within 6 months of applying. Start them early and prepare your research proposal while you wait.',
     fees: serviceFees,
   },
-]
 
-export const getScholarship = (id: string | undefined) =>
-  scholarships.find((s) => s.id === id)
+  /* Chinese language programmes.
+
+     [PLACEHOLDER] University names are still to be confirmed by the office. The
+     two Shenyang programmes are at different universities and are told apart
+     here by their fees only; rename them once the universities are confirmed. */
+  {
+    id: 'beijing-chinese-language',
+    title: 'Beijing Chinese Language Scholarship',
+    shortTitle: 'Beijing language',
+    levels: 'Chinese language, 1 year',
+    levelKeys: ['language'],
+    location: 'Beijing',
+    status: 'Open',
+    closingLabel: 'Sep 2026 intake',
+    closingKV: 'To be confirmed',
+    cscaRequired: false,
+    majors: ['Chinese Language'],
+    compare: {
+      tuition: '5,000 RMB per year after the scholarship',
+      accommodation: '600 to 900 RMB per month, or live off campus',
+      taughtIn: 'Chinese, taught as a language course',
+      openTo: 'All nationalities',
+      extraAward: 'None',
+    },
+    blurb:
+      'A one-year Chinese language course in Beijing. The scholarship brings the fee down to 5,000 RMB a year, and you may live off campus if you prefer.',
+    about1:
+      'This is a one-year Chinese language course in Beijing for the September 2026 intake. After the scholarship you pay 5,000 RMB a year. University accommodation is 600 to 900 RMB a month, and unlike most programmes you are free to live outside the campus if you would rather find your own room.',
+    about2:
+      'Admissions move quickly here. A pre-admission decision takes 3 to 5 days and the JW letter you need for your visa follows within 1 to 2 weeks. The course is open to applicants of all nationalities aged 18 to 30, and no CSCA exam is required.',
+    facts: [
+      { label: 'Level', value: 'Chinese language course' },
+      { label: 'Location', value: 'Beijing' },
+      { label: 'Duration', value: '1 year' },
+      { label: 'Award', value: 'Fee after the scholarship is 5,000 RMB per year' },
+      {
+        label: 'Accommodation',
+        value: '600 to 900 RMB per month. Students may live outside the campus.',
+      },
+      { label: 'Age', value: '18 to 30 years' },
+      { label: 'Countries', value: 'All nationalities accepted' },
+      { label: 'Exam', value: 'No CSCA exam needed' },
+      { label: 'Pre-admission', value: '3 to 5 days' },
+      { label: 'JW letter', value: '1 to 2 weeks' },
+      { label: 'Intake', value: 'September 2026. Limited seats.' },
+    ],
+    eligibility: [
+      'Aged 18 to 30.',
+      'A valid passport with at least three years to expiry.',
+      'Your highest degree or certificate, with the transcript.',
+      'A police clearance certificate.',
+      'A physical examination form.',
+      'A bank statement.',
+      'A passport photograph and the completed application form, which we produce for you.',
+    ],
+    funding:
+      'The scholarship brings the course fee down to 5,000 RMB per year, which you pay to the university. Accommodation is 600 to 900 RMB a month on top of that, and you may instead rent outside the campus at your own cost. Living costs, flights and visa fees are yours, as on every programme.',
+    timeline:
+      'The intake is September 2026 and seats are limited. A pre-admission decision comes back in 3 to 5 days once your file is complete, and the JW letter for your visa follows 1 to 2 weeks after that. Get your police clearance and medical form started first, as they are the slowest documents.',
+    fees: serviceFees,
+  },
+  {
+    id: 'shenyang-chinese-language',
+    title: 'Shenyang Chinese Language Programme',
+    shortTitle: 'Shenyang programme',
+    levels: 'Chinese language',
+    levelKeys: ['language'],
+    location: 'Shenyang, Liaoning Province',
+    status: 'Open',
+    closingLabel: 'Sep 2026 intake',
+    closingKV: 'To be confirmed',
+    cscaRequired: false,
+    majors: ['Chinese Language'],
+    compare: {
+      tuition: '8,000 RMB per year',
+      accommodation: '4,500 RMB per year',
+      taughtIn: 'English medium',
+      openTo: 'International students, up to age 30',
+      extraAward: 'None',
+    },
+    blurb:
+      'A Chinese language programme in Shenyang with admission decided within 2 days. Tuition is 8,000 RMB a year and accommodation 4,500 RMB a year.',
+    about1:
+      'This Chinese language programme is in Shenyang, in Liaoning Province in the north east of China. Tuition is 8,000 RMB per year and university accommodation is 4,500 RMB per year, both paid to the university. Teaching is English medium, so you are not left behind while your Chinese is still building.',
+    about2:
+      'What sets this one apart is speed: admission is decided within 2 days of a complete file. Seats are limited for the September 2026 intake, and applications are handled in the order they arrive.',
+    facts: [
+      { label: 'Level', value: 'Chinese language course' },
+      { label: 'Location', value: 'Shenyang, Liaoning Province' },
+      { label: 'Tuition', value: '8,000 RMB per year' },
+      { label: 'Accommodation', value: '4,500 RMB per year' },
+      { label: 'Age', value: 'Up to 30 years' },
+      { label: 'Language', value: 'English medium' },
+      { label: 'Exam', value: 'No CSCA exam needed' },
+      { label: 'Admission', value: 'Decided within 2 days' },
+      { label: 'Intake', value: 'September 2026. Limited seats.' },
+    ],
+    eligibility: [
+      'Aged 30 or under.',
+      'A valid passport with at least three years to expiry.',
+      'Completed high school, with the certificate and transcript.',
+      'Good conduct, confirmed by a police clearance certificate.',
+      'A medical report from an approved hospital.',
+      'Comfortable studying in English while you learn Chinese.',
+    ],
+    funding:
+      'There is no partial award to work out here: tuition is 8,000 RMB per year and accommodation is 4,500 RMB per year, so the university side comes to 12,500 RMB a year. Flights, visa fees, insurance and living costs are paid by you, and we tell you what to budget before you accept a place.',
+    timeline:
+      'The intake is September 2026. Admission is decided within 2 days of a complete file, so the only thing that slows this application down is missing documents. Send your passport, certificates and police clearance together and the rest moves quickly.',
+    fees: serviceFees,
+  },
+  {
+    id: 'shenyang-language-scholarship',
+    title: 'Shenyang Chinese Language Scholarship',
+    shortTitle: 'Shenyang scholarship',
+    levels: 'Chinese language, 1 year',
+    levelKeys: ['language'],
+    location: 'Shenyang, Liaoning Province',
+    status: 'Open',
+    closingLabel: 'Sep 2026 intake',
+    closingKV: 'To be confirmed',
+    cscaRequired: false,
+    majors: ['Chinese Language'],
+    compare: {
+      tuition: '11,000 RMB for the year',
+      accommodation: 'Hostel 5,400 RMB per year',
+      taughtIn: 'Chinese, taught as a language course',
+      openTo: 'International students aged 18 to 30',
+      extraAward: 'None',
+    },
+    blurb:
+      'A one-year Chinese language programme in Shenyang with a pre-admission notice in 3 days. Tuition is 11,000 RMB for the year and the hostel 5,400 RMB.',
+    about1:
+      'This is a one-year Chinese language programme at a university in Shenyang, Liaoning Province, for the September 2026 intake. Tuition is 11,000 RMB for the year and the hostel is 5,400 RMB per year, both paid to the university.',
+    about2:
+      'A pre-admission notice comes back within 3 days of a complete file, and the admission letter follows shortly after. The programme is open to applicants aged 18 to 30 and no CSCA exam is required.',
+    facts: [
+      { label: 'Level', value: 'Chinese language course' },
+      { label: 'Location', value: 'Shenyang, Liaoning Province' },
+      { label: 'Duration', value: '1 year' },
+      { label: 'Tuition', value: '11,000 RMB for the year' },
+      { label: 'Accommodation', value: 'Hostel 5,400 RMB per year' },
+      { label: 'Age', value: '18 to 30 years' },
+      { label: 'Exam', value: 'No CSCA exam needed' },
+      { label: 'Pre-admission', value: 'Notice within 3 days' },
+      { label: 'Intake', value: 'September 2026' },
+    ],
+    eligibility: [
+      'Aged 18 to 30.',
+      'A valid passport with at least three years to expiry.',
+      'Completed high school, with the certificate and transcript.',
+      'Good conduct, confirmed by a police clearance certificate.',
+      'A medical report from an approved hospital.',
+      'Willingness to study full time in China for the year.',
+    ],
+    funding:
+      'Tuition is 11,000 RMB for the year and the hostel is 5,400 RMB per year, so the university side comes to 16,400 RMB for the year. Flights, visa fees, insurance and day to day living are paid by you.',
+    timeline:
+      'The intake is September 2026. Once your file is complete the pre-admission notice comes back within 3 days, so start on the documents that take longest, the police clearance and the medical report, before anything else.',
+    fees: serviceFees,
+  },
+  {
+    id: 'shijiazhuang-language-csca',
+    title: 'Shijiazhuang Chinese Language and CSCA Programme',
+    shortTitle: 'Shijiazhuang',
+    levels: 'Chinese language',
+    levelKeys: ['language'],
+    location: 'Shijiazhuang, about 1.5 hours from Beijing',
+    status: 'Open',
+    closingLabel: 'Sep 2026 intake',
+    closingKV: 'To be confirmed',
+    cscaRequired: false,
+    majors: [
+      'Chinese Language and CSCA',
+      'Chinese Language and Traditional Chinese Medicine (TCM) Techniques',
+    ],
+    compare: {
+      tuition: 'Tuition with a 4-person dormitory, 9,500 RMB per year',
+      accommodation: 'Included. A 2-person room costs 2,500 RMB more per year',
+      taughtIn: 'Chinese, taught as a language course',
+      openTo: 'Aged 18 to 26. War-affected countries are not eligible',
+      extraAward: 'None',
+    },
+    blurb:
+      'Two tracks in Shijiazhuang, an hour and a half from Beijing: Chinese language with CSCA preparation, or Chinese language with Traditional Chinese Medicine. Tuition and a dormitory place together cost 9,500 RMB a year.',
+    about1:
+      'This programme is in Shijiazhuang, about 1.5 hours from Beijing by train, and comes in two tracks. The first pairs Chinese language with CSCA preparation, which sets you up for the degree scholarships that ask for a CSCA result. The second pairs Chinese language with Traditional Chinese Medicine techniques.',
+    about2:
+      'Tuition and a place in a 4-person dormitory are charged together at 9,500 RMB per year. A 2-person room costs 2,500 RMB more. The programme is for applicants aged 18 to 26, and applicants from war-affected countries are not eligible. A deposit of 3,000 RMB is paid after your JW letter is issued.',
+    facts: [
+      { label: 'Level', value: 'Chinese language course' },
+      { label: 'Location', value: 'Shijiazhuang, about 1.5 hours from Beijing' },
+      {
+        label: 'Tracks',
+        value:
+          'Chinese Language and CSCA · Chinese Language and Traditional Chinese Medicine (TCM) techniques',
+      },
+      {
+        label: 'Tuition',
+        value: 'Tuition with a 4-person dormitory, 9,500 RMB per year',
+      },
+      { label: 'Accommodation', value: 'A 2-person dormitory costs 2,500 RMB more per year' },
+      { label: 'Age', value: '18 to 26 years' },
+      {
+        label: 'Countries',
+        value: 'Applicants from war-affected countries are not eligible',
+      },
+      { label: 'Deposit', value: '3,000 RMB, paid after the JW letter is issued' },
+      { label: 'Pre-admission', value: '1 to 2 days' },
+      { label: 'Admission notice and JW', value: '10 days at the earliest' },
+      { label: 'Intake', value: 'September 2026' },
+    ],
+    eligibility: [
+      'Aged 18 to 26.',
+      'Applicants from war-affected countries are not eligible for this programme.',
+      'A valid passport with at least three years to expiry.',
+      'Completed high school, with the certificate and transcript.',
+      'Good conduct, confirmed by a police clearance certificate.',
+      'A medical report from an approved hospital.',
+      'Able to pay the 3,000 RMB deposit once your JW letter is issued.',
+    ],
+    funding:
+      'Tuition and a place in a 4-person dormitory are charged together at 9,500 RMB per year, so your accommodation is already inside that figure. If you want a 2-person room instead, add 2,500 RMB per year. A deposit of 3,000 RMB is paid after your JW letter is issued and goes towards what you owe. Flights, visa fees and living costs are yours.',
+    timeline:
+      'The intake is September 2026. Pre-admission takes 1 to 2 days, and the admission notice with the JW letter takes 10 days at the earliest after that. Budget for the 3,000 RMB deposit at the JW stage so it does not catch you out, and start the police clearance early.',
+    fees: serviceFees,
+  },
+]

@@ -2784,6 +2784,91 @@ select.field-input {
   white-space: pre-wrap;
 }
 
+/* ===== Admin: scholarship editing ===== */
+/* The long text fields reuse .field-input so the editor matches the public
+   application form, and only need the parts a textarea does differently. */
+textarea.field-input {
+  min-height: 76px;
+  line-height: 1.55;
+  resize: vertical;
+}
+/* Reorder arrows on each row of the scholarships list. */
+.sch-order {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.sch-order-btn {
+  width: 26px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #cdd5dc;
+  border-radius: 3px;
+  background: #fff;
+  color: #16395c;
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+}
+.sch-order-btn:hover:not(:disabled) {
+  border-color: #16395c;
+  background: #f4f7f9;
+}
+.sch-order-btn:disabled {
+  color: #b9c3cc;
+  cursor: default;
+}
+/* .admin-card is sized and tucked under the hero for the sign-in box. Inside the
+   tabs it is a plain panel, so those two things are undone. */
+.admin-card.sch-panel {
+  max-width: none;
+  margin: 0;
+  box-shadow: 0 2px 10px rgba(18, 40, 61, 0.06);
+}
+.sch-editor .admin-sub {
+  margin-top: 30px;
+  padding-top: 18px;
+  border-top: 1px solid #edf0f3;
+}
+.sch-editor .admin-sub:first-of-type {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+.sch-row-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0 16px;
+}
+.sch-fact-row {
+  display: grid;
+  grid-template-columns: minmax(140px, 1fr) minmax(200px, 2fr) auto;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.admin-check-row {
+  display: flex;
+  gap: 22px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+.admin-editor-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid #edf0f3;
+}
+@media (max-width: 620px) {
+  .sch-fact-row {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ===== Placeholder marker (missing client content) ===== */
 .placeholder-copy {
   color: #8a6d2f;

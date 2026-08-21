@@ -2,7 +2,7 @@ import { useRef, useState } from 'react'
 import type { ChangeEvent } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { usePageMeta } from '../lib/meta'
-import { getScholarship, scholarships } from '../data/scholarships'
+import { useScholarships } from '../lib/scholarshipStore'
 import { contact, documents } from '../data/content'
 import { photos, photoBlurs } from '../data/photos'
 import HeroBackdrop from '../components/HeroBackdrop'
@@ -31,7 +31,12 @@ const levelLabels: Record<string, string> = {
   bachelor: "Bachelor's",
   masters: "Master's",
   phd: 'PhD',
+  language: 'Chinese language',
 }
+
+/* Study levels come from the saved programmes, so an unrecognised one is shown
+   as it stands rather than as a blank. */
+const levelLabel = (key: string) => levelLabels[key] ?? key
 
 const DOC_STEP = formSteps.length + 1
 const REVIEW_STEP = TOTAL_STEPS
@@ -42,8 +47,11 @@ const STUDY_STEP = formSteps.findIndex((s) => s.label === 'Study choice') + 1
 export default function Apply() {
   const navigate = useNavigate()
   const [params, setParams] = useSearchParams()
-  const initial = getScholarship(params.get('scholarship') ?? undefined)
-  const [selectedId, setSelectedId] = useState(initial?.id ?? scholarships[0].id)
+  const scholarships = useScholarships()
+  /* The saved programmes arrive after the first render, so the choice is held
+     as an id and resolved against whatever list is current. Null means "not
+     chosen yet", which falls back to the link the visitor arrived on. */
+  const [selectedId, setSelectedId] = useState<string | null>(null)
   const [step, setStep] = useState(1)
   const [level, setLevel] = useState('bachelor')
   const [form, setForm] = useState<Record<string, string>>({ ...formDefaults })
@@ -67,16 +75,20 @@ export default function Apply() {
   const [failedUploads, setFailedUploads] = useState<string[]>([])
   const fileInputs = useRef<Record<string, HTMLInputElement | null>>({})
 
-  const sel = getScholarship(selectedId) ?? scholarships[0]
+  const byId = (id: string | null | undefined) =>
+    id ? scholarships.find((s) => s.id === id) : undefined
+  const sel = byId(selectedId) ?? byId(params.get('scholarship')) ?? scholarships[0]
 
   usePageMeta(
     'Apply for a Scholarship | StudyInChinaNow',
     'Apply online for a scholarship in China. We fill in the official Foreign Student Application Form for you from your answers, so there is nothing to print or scan.',
   )
 
+  /* A programme saved without any study level still has to produce a sensible
+     form, so bachelor's is the last resort. */
   const effLevel = sel.levelKeys.includes(level as (typeof sel.levelKeys)[number])
     ? level
-    : sel.levelKeys[0]
+    : (sel.levelKeys[0] ?? 'bachelor')
   const isAdvLevel = effLevel === 'masters' || effLevel === 'phd'
   const uploadDocs = documents.filter(
     (d) => (!d.adv || isAdvLevel) && (!d.cscaOnly || sel.cscaRequired) && !d.generated,
@@ -207,7 +219,7 @@ export default function Apply() {
       const result = await submitApplication({
         scholarshipId: sel.id,
         scholarshipTitle: sel.title,
-        level: levelLabels[effLevel],
+        level: levelLabel(effLevel),
         form: { ...form, signature: signature.trim() },
         education,
         employment,
@@ -400,7 +412,7 @@ export default function Apply() {
                           className={`level-btn${effLevel === k ? ' selected' : ''}`}
                           onClick={() => setLevel(k)}
                         >
-                          {levelLabels[k]}
+                          {levelLabel(k)}
                         </button>
                       ))}
                     </div>
@@ -611,7 +623,7 @@ export default function Apply() {
                 </p>
                 <p className="upload-count">
                   Showing {uploadDocs.length} document slots for a{' '}
-                  {levelLabels[effLevel].toLowerCase()} application.
+                  {levelLabel(effLevel).toLowerCase()} application.
                 </p>
                 <div className="official-note good">
                   <strong>You do not need the foreign student application form.</strong> We
@@ -718,7 +730,7 @@ export default function Apply() {
                   </div>
                   <div className="review-row">
                     <div className="review-label">Study level</div>
-                    <div className="review-value">{levelLabels[effLevel]}</div>
+                    <div className="review-value">{levelLabel(effLevel)}</div>
                   </div>
                 </div>
 
