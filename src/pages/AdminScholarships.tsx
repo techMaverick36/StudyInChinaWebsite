@@ -89,6 +89,9 @@ export default function AdminScholarships() {
   const [editing, setEditing] = useState<AdminScholarship | null>(null)
   const [deleteAskId, setDeleteAskId] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
+  /* The one row being switched on or off. Kept apart from `busy` so publishing
+     one programme does not freeze the buttons on all the others. */
+  const [pendingId, setPendingId] = useState<string | null>(null)
 
   const load = useCallback(async () => {
     if (!supabase) return
@@ -120,41 +123,82 @@ export default function AdminScholarships() {
     await reloadPublicSite()
   }
 
+  /* Writes one record. Returns an empty string when it worked, or the message
+     to show. Both the editor and the publish switch go through here. */
+  const persist = async (record: AdminScholarship): Promise<string> => {
+    if (!supabase) return 'The database is not configured.'
+    const { error: err } = await supabase
+      .from(SCHOLARSHIPS_TABLE)
+      .upsert(toRow(record), { onConflict: 'id' })
+    return err ? friendlyError(err, 'Could not save') : ''
+  }
+
   const save = async (record: AdminScholarship) => {
     if (!supabase || busy) return
     setBusy(true)
     setError('')
-    const { error: err } = await supabase
-      .from(SCHOLARSHIPS_TABLE)
-      .upsert(toRow(record), { onConflict: 'id' })
-    if (err) {
-      setError(friendlyError(err, 'Could not save'))
-    } else {
-      setEditing(null)
-      await afterWrite(`Saved “${record.title}”.`)
+    try {
+      const message = await persist(record)
+      if (message) {
+        setError(message)
+      } else {
+        setEditing(null)
+        await afterWrite(`Saved “${record.title}”.`)
+      }
+    } finally {
+      /* Without this, a failure while refreshing would leave every button in
+         the panel disabled until the page was reloaded. */
+      setBusy(false)
     }
-    setBusy(false)
   }
 
   const remove = async (record: AdminScholarship) => {
     if (!supabase || busy) return
     setBusy(true)
     setError('')
-    const { error: err } = await supabase
-      .from(SCHOLARSHIPS_TABLE)
-      .delete()
-      .eq('id', record.id)
-    if (err) {
-      setError(friendlyError(err, 'Could not delete'))
-    } else {
-      setDeleteAskId(null)
-      await afterWrite(`Deleted “${record.title}”.`)
+    try {
+      const { error: err } = await supabase
+        .from(SCHOLARSHIPS_TABLE)
+        .delete()
+        .eq('id', record.id)
+      if (err) {
+        setError(friendlyError(err, 'Could not delete'))
+      } else {
+        setDeleteAskId(null)
+        await afterWrite(`Deleted “${record.title}”.`)
+      }
+    } finally {
+      setBusy(false)
     }
-    setBusy(false)
   }
 
+  /* Publishing is a one-click change: it saves on the spot, with no form to
+     open and nothing else to confirm. The row flips straight away and is put
+     back only if the write fails, so the list never claims something is live
+     when it is not. */
   const togglePublished = async (record: AdminScholarship) => {
-    await save({ ...record, published: !record.published })
+    if (!supabase || pendingId) return
+    const next = { ...record, published: !record.published }
+    setPendingId(record.id)
+    setError('')
+    setNote('')
+    setRows((rs) => rs.map((r) => (r.id === record.id ? next : r)))
+    try {
+      const message = await persist(next)
+      if (message) {
+        setRows((rs) => rs.map((r) => (r.id === record.id ? record : r)))
+        setError(message)
+      } else {
+        setNote(
+          next.published
+            ? `“${record.title}” is now on the site.`
+            : `“${record.title}” is now a draft. Visitors can no longer see it.`,
+        )
+        await reloadPublicSite()
+      }
+    } finally {
+      setPendingId(null)
+    }
   }
 
   /* Reordering swaps the two rows' positions, which is all the public site
@@ -170,17 +214,20 @@ export default function AdminScholarships() {
     next[index] = { ...b, sortOrder: a.sortOrder }
     next[other] = { ...a, sortOrder: b.sortOrder }
     setRows(next.sort((x, y) => x.sortOrder - y.sortOrder))
-    const { error: err } = await supabase.from(SCHOLARSHIPS_TABLE).upsert(
-      [
-        { ...toRow(a), sort_order: b.sortOrder },
-        { ...toRow(b), sort_order: a.sortOrder },
-      ],
-      { onConflict: 'id' },
-    )
-    if (err) setError(friendlyError(err, 'Could not reorder'))
-    await load()
-    await reloadPublicSite()
-    setBusy(false)
+    try {
+      const { error: err } = await supabase.from(SCHOLARSHIPS_TABLE).upsert(
+        [
+          { ...toRow(a), sort_order: b.sortOrder },
+          { ...toRow(b), sort_order: a.sortOrder },
+        ],
+        { onConflict: 'id' },
+      )
+      if (err) setError(friendlyError(err, 'Could not reorder'))
+      await load()
+      await reloadPublicSite()
+    } finally {
+      setBusy(false)
+    }
   }
 
   /* One-off starting point so the office is not typing eight programmes in from
@@ -189,12 +236,15 @@ export default function AdminScholarships() {
     if (!supabase || busy) return
     setBusy(true)
     setError('')
-    const { error: err } = await supabase
-      .from(SCHOLARSHIPS_TABLE)
-      .upsert(seedAsAdminRecords().map(toRow), { onConflict: 'id' })
-    if (err) setError(friendlyError(err, 'Could not copy the built-in programmes in'))
-    else await afterWrite('The built-in programmes were copied in. Edit them freely.')
-    setBusy(false)
+    try {
+      const { error: err } = await supabase
+        .from(SCHOLARSHIPS_TABLE)
+        .upsert(seedAsAdminRecords().map(toRow), { onConflict: 'id' })
+      if (err) setError(friendlyError(err, 'Could not copy the built-in programmes in'))
+      else await afterWrite('The built-in programmes were copied in. Edit them freely.')
+    } finally {
+      setBusy(false)
+    }
   }
 
   const nextSortOrder = rows.length ? Math.max(...rows.map((r) => r.sortOrder)) + 10 : 10
@@ -308,9 +358,18 @@ export default function AdminScholarships() {
                 <button
                   className="btn-outline-navy admin-btn-sm"
                   onClick={() => void togglePublished(r)}
-                  disabled={busy}
+                  disabled={busy || pendingId === r.id}
+                  title={
+                    r.published
+                      ? 'Take this off the site now. Saves immediately.'
+                      : 'Put this on the site now. Saves immediately.'
+                  }
                 >
-                  {r.published ? 'Unpublish' : 'Publish'}
+                  {pendingId === r.id
+                    ? 'Saving…'
+                    : r.published
+                      ? 'Unpublish'
+                      : 'Publish'}
                 </button>
                 <button
                   className="admin-trash-link"
