@@ -1147,6 +1147,149 @@ textarea:focus {
 .acc-panel p:first-child {
   margin-top: 14px;
 }
+
+/* ----- Formatted text from the admin editor, on the public pages ----- */
+.detail-rich p,
+.detail-rich li {
+  font-size: 16.5px;
+  line-height: 1.75;
+  color: #3f4d5a;
+}
+.detail-rich p {
+  margin: 0 0 14px;
+}
+.detail-rich ul,
+.detail-rich ol,
+.acc-rich ul,
+.acc-rich ol {
+  margin: 0 0 14px;
+  padding-left: 22px;
+}
+.detail-rich ul,
+.acc-rich ul {
+  list-style: disc;
+}
+.detail-rich ol,
+.acc-rich ol {
+  list-style: decimal;
+}
+.detail-rich li,
+.acc-rich li {
+  margin: 4px 0;
+}
+.acc-rich li {
+  font-size: 15.5px;
+  line-height: 1.75;
+  color: #3f4d5a;
+}
+.detail-rich li p,
+.acc-rich li p {
+  margin: 0;
+}
+.detail-rich a,
+.acc-rich a {
+  color: #16395c;
+  text-decoration: underline;
+}
+.detail-block .detail-rich:last-child > :last-child,
+.acc-rich > :last-child {
+  margin-bottom: 0;
+}
+
+/* ----- Rich text editor (admin panel) ----- */
+.rte {
+  border: 1px solid #cdd5dc;
+  border-radius: 5px;
+  background: #fff;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.rte:hover {
+  border-color: #a9b6c2;
+}
+.rte:focus-within {
+  border-color: #16395c;
+  box-shadow: 0 0 0 3px rgba(22, 57, 92, 0.1);
+}
+.rte-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px;
+  padding: 5px;
+  border-bottom: 1px solid #e2e7ec;
+  background: #f7f9fb;
+  border-radius: 5px 5px 0 0;
+}
+.rte-btn {
+  min-width: 32px;
+  height: 32px;
+  padding: 0 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: transparent;
+  color: #3a4753;
+  cursor: pointer;
+}
+.rte-btn:hover:not(:disabled) {
+  background: #e7edf3;
+}
+.rte-btn.is-active {
+  background: #16395c;
+  color: #fff;
+}
+.rte-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.rte-sep {
+  width: 1px;
+  height: 20px;
+  margin: 0 4px;
+  background: #d5dde5;
+}
+.rte-content {
+  padding: 12px 14px;
+  outline: none;
+  font: 400 15px/1.6 'Inter', sans-serif;
+  color: #17222c;
+}
+.rte-content p {
+  margin: 0 0 10px;
+}
+.rte-content p:last-child {
+  margin-bottom: 0;
+}
+.rte-content ul,
+.rte-content ol {
+  margin: 0 0 10px;
+  padding-left: 22px;
+}
+.rte-content ul {
+  list-style: disc;
+}
+.rte-content ol {
+  list-style: decimal;
+}
+.rte-content li {
+  margin: 3px 0;
+}
+.rte-content li p {
+  margin: 0;
+}
+.rte-content a {
+  color: #16395c;
+  text-decoration: underline;
+}
+/* The bullet-list fields have no toolbar, so they need the top corners back. */
+.rte.is-list .rte-content {
+  border-radius: 5px;
+}
+.rte.is-list .rte-content ul {
+  margin: 0;
+}
 .acc-panel p:last-child {
   margin-bottom: 0;
 }

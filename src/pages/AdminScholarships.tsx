@@ -10,6 +10,7 @@ import {
   useScholarshipStore,
 } from '../lib/scholarshipStore'
 import type { AdminScholarship, ScholarshipRow } from '../lib/scholarshipStore'
+import { BulletListField, RichTextField } from '../components/RichTextEditor'
 
 /* Scholarships tab of the admin panel: the office adds, edits, reorders and
    removes the programmes shown on the public site. Everything here writes to
@@ -24,16 +25,6 @@ const LEVEL_OPTIONS: { key: LevelKey; label: string }[] = [
 ]
 
 const STATUS_OPTIONS: ScholarshipStatus[] = ['Open', 'Closing soon']
-
-/* One item per line is how the office already writes these lists, so the long
-   fields are edited as text and split on save. */
-const linesToList = (v: string) =>
-  v
-    .split('\n')
-    .map((l) => l.trim())
-    .filter(Boolean)
-
-const listToLines = (v: string[]) => v.join('\n')
 
 /* URL slug for a new programme: /scholarships/<id>. */
 const slugify = (v: string) =>
@@ -627,35 +618,36 @@ function ScholarshipEditor({
         />
       </Field>
       <Field label="About, first paragraph">
-        <textarea
-          className="field-input"
-          rows={4}
+        <RichTextField
+          label="About, first paragraph"
           value={record.about1}
-          onChange={(e) => set('about1', e.target.value)}
+          onChange={(v) => set('about1', v)}
         />
       </Field>
       <Field label="About, second paragraph">
-        <textarea
-          className="field-input"
-          rows={4}
+        <RichTextField
+          label="About, second paragraph"
           value={record.about2}
-          onChange={(e) => set('about2', e.target.value)}
+          onChange={(v) => set('about2', v)}
         />
       </Field>
-      <Field label="Majors, one per line" help="These also fill the Study by subject list.">
-        <textarea
-          className="field-input"
-          rows={6}
-          value={listToLines(record.majors)}
-          onChange={(e) => set('majors', linesToList(e.target.value))}
+      <Field
+        label="Majors"
+        help="Press Enter for a new bullet, one major per bullet. These also fill the Study by subject list and the course suggestions on the application form."
+      >
+        <BulletListField
+          label="Majors"
+          value={record.majors}
+          onChange={(v) => set('majors', v)}
+          minHeight={150}
         />
       </Field>
-      <Field label="Requirements, one per line">
-        <textarea
-          className="field-input"
-          rows={7}
-          value={listToLines(record.eligibility)}
-          onChange={(e) => set('eligibility', linesToList(e.target.value))}
+      <Field label="Requirements" help="Press Enter for a new bullet, one requirement per bullet.">
+        <BulletListField
+          label="Requirements"
+          value={record.eligibility}
+          onChange={(v) => set('eligibility', v)}
+          minHeight={170}
         />
       </Field>
 
@@ -739,27 +731,24 @@ function ScholarshipEditor({
 
       <h3 className="admin-sub">The Details panel</h3>
       <Field label="What the award covers">
-        <textarea
-          className="field-input"
-          rows={4}
+        <RichTextField
+          label="What the award covers"
           value={record.funding}
-          onChange={(e) => set('funding', e.target.value)}
+          onChange={(v) => set('funding', v)}
         />
       </Field>
       <Field label="Timeline">
-        <textarea
-          className="field-input"
-          rows={4}
+        <RichTextField
+          label="Timeline"
           value={record.timeline}
-          onChange={(e) => set('timeline', e.target.value)}
+          onChange={(v) => set('timeline', v)}
         />
       </Field>
       <Field label="Fees" help="The wording about the service fee. The same on every programme unless you change it.">
-        <textarea
-          className="field-input"
-          rows={4}
+        <RichTextField
+          label="Fees"
           value={record.fees}
-          onChange={(e) => set('fees', e.target.value)}
+          onChange={(v) => set('fees', v)}
         />
       </Field>
 

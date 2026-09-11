@@ -5,6 +5,7 @@ import { statusColorLight } from '../data/scholarships'
 import { useScholarship, useScholarshipStore } from '../lib/scholarshipStore'
 import { photos, photoBlurs } from '../data/photos'
 import HeroBackdrop from '../components/HeroBackdrop'
+import RichText from '../components/RichText'
 
 export default function ScholarshipDetail() {
   const { id } = useParams()
@@ -55,8 +56,8 @@ export default function ScholarshipDetail() {
       <div className="container-860 body-pad">
         <div className="detail-block">
           <h2 className="detail-h">About this scholarship</h2>
-          <p className="detail-p">{sel.about1}</p>
-          <p className="detail-p">{sel.about2}</p>
+          <RichText html={sel.about1} className="detail-rich" />
+          <RichText html={sel.about2} className="detail-rich" />
         </div>
 
         <div className="detail-block">
@@ -94,15 +95,9 @@ export default function ScholarshipDetail() {
           </button>
           {detailsOpen && (
             <div className="acc-panel">
-              <p>
-                <strong>What the award covers.</strong> {sel.funding}
-              </p>
-              <p>
-                <strong>Timeline.</strong> {sel.timeline}
-              </p>
-              <p>
-                <strong>Fees.</strong> {sel.fees}
-              </p>
+              <RichText html={sel.funding} lead="What the award covers." className="acc-rich" />
+              <RichText html={sel.timeline} lead="Timeline." className="acc-rich" />
+              <RichText html={sel.fees} lead="Fees." className="acc-rich" />
             </div>
           )}
         </div>
