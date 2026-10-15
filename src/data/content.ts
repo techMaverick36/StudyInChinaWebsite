@@ -13,12 +13,14 @@ export const contact = {
   hours: 'Monday to Friday, 9:00 to 17:00',
 }
 
-/* Home — The Process (short lines are approved prototype copy). */
+/* Home — The Process (short lines are approved prototype copy). Titles are kept
+   short enough to sit on one line in the four-column row; the How to Apply page
+   below carries the full wording. */
 export const procSteps = [
-  { num: '01', title: 'Check that you qualify', short: 'Confirm your level, grades and language meet the criteria.' },
-  { num: '02', title: 'Prepare your documents', short: 'Gather transcripts, passport and reference letters.' },
-  { num: '03', title: 'Complete the online application', short: 'Submit one simple online application with our guidance.' },
-  { num: '04', title: 'We review and contact you', short: 'We place you and support your visa and travel.' },
+  { num: '01', title: 'Check you qualify', short: 'Read the age, grade and language rules for your study level.' },
+  { num: '02', title: 'Prepare documents', short: 'Collect your passport, transcripts and 2 recommendation letters.' },
+  { num: '03', title: 'Apply online', short: 'Fill in the form on this site in about 15 minutes.' },
+  { num: '04', title: 'Hear from our team', short: 'Our Kampala office calls you within 3 working days, then guides your admission, visa and travel.' },
 ]
 
 /* How to Apply — step bodies. */
@@ -26,22 +28,22 @@ export const guideSteps = [
   {
     num: '1',
     title: 'Check that you qualify',
-    body: 'Each scholarship has its own rules on age, grades and study level. Read the page for the scholarship you want before you start. If you are not sure whether you qualify, call the office or send us a WhatsApp message. We will tell you honestly, at no charge.',
+    body: 'Each scholarship sets its own rules on age, grades and study level. Open the page for the scholarship you want and read its requirements first. If you can’t tell whether you qualify, call the office or send a WhatsApp message. The answer is honest and free.',
   },
   {
     num: '2',
     title: 'Prepare your documents',
-    body: 'Most delays happen at this stage, so start early. Some documents, like the Interpol police clearance, can take several weeks to obtain. The Requirements page lists everything you need, with a short instruction for each item.',
+    body: 'Start here, because most delays happen at this step. The Interpol police clearance can take several weeks, so request it first. The Requirements page lists every document with a short instruction for each.',
   },
   {
     num: '3',
     title: 'Complete the online application',
-    body: 'Fill in the application form on this website. It takes about 10 to 15 minutes, and you can upload your documents as you go. If a document is not ready yet, submit what you have. We will follow up with you about the rest.',
+    body: 'Fill in the application form on this site. It takes about 15 minutes, and you upload your documents as you go. Submit even if a document is still missing; the office follows up with you for the rest.',
   },
   {
     num: '4',
-    title: 'We review and contact you',
-    body: 'Our team in Kampala checks every application personally. If anything is missing or unclear, we call you. Once your file is complete, we submit it to the universities and keep you informed at each stage, through to your admission letter, visa and travel.',
+    title: 'Our team reviews your file',
+    body: 'The Kampala team checks every application by hand and calls you if anything is missing or unclear. Once your file is complete, it goes to the universities, and you get an update at each stage through to your admission letter, visa and travel.',
   },
 ]
 
@@ -102,7 +104,7 @@ export const alumni = [
   },
 ]
 
-/* Scholarships page — what the award does not pay for. Being straight about
+/* How to Apply — what the award does not pay for. Being straight about
    this early is what separates a real placement service from a scam, and it
    stops families budgeting for a trip they cannot afford.
 
@@ -111,15 +113,15 @@ export const alumni = [
 export const yourOwnCosts = [
   {
     item: 'Flight to China',
-    note: 'One way, booked once you have your admission letter and visa.',
+    note: 'One way. Book it after your admission letter and visa arrive.',
   },
   {
     item: 'Student visa',
-    note: 'Paid at the Chinese embassy in your country. We prepare the paperwork with you.',
+    note: 'Paid at the Chinese embassy in your country. The office prepares the paperwork with you.',
   },
   {
     item: 'Medical check and insurance',
-    note: 'A medical report before you travel, and insurance on arrival.',
+    note: 'A medical report before you travel, and health insurance once you arrive.',
   },
   {
     item: 'Accommodation',
@@ -127,35 +129,45 @@ export const yourOwnCosts = [
   },
   {
     item: 'Food and day to day living',
-    note: 'Paid monthly by you or your sponsor. We tell you what students actually spend.',
+    note: 'Paid monthly by you or your sponsor. Ask the office what current students spend each month.',
   },
   {
     item: 'Our service fee',
-    note: 'A single stated fee for placement and processing. You hear the full amount before you commit.',
+    note: 'A fixed fee for placement and processing. You see the full amount before you commit.',
   },
 ]
 
-/* Contact — FAQ. Questions are approved prototype copy. Answers are production
-   copy; the fee and timing answers should be confirmed by the office. */
+/* Contact — FAQ. Questions follow what students type into Google, and the
+   page publishes them as FAQPage structured data. The fee and timing answers
+   should be confirmed by the office. */
 export const faqs = [
   {
-    q: 'Who is eligible to apply?',
-    a: 'Most of our applicants are African students aged 18 to 35 who have finished high school or a first degree. Each scholarship has its own rules on age, grades and study level, so check the page for the one you want. If you are not sure, contact us and we will check for you at no charge.',
+    q: 'Who can apply for a scholarship in China?',
+    a: 'African students who have finished high school can apply for a Bachelor’s or Chinese language programme. A Master’s needs a first degree. Most applicants are 18 to 35, and each scholarship lists its own age, grade and level rules on its page. Call the office for a free eligibility check.',
   },
   {
-    q: 'What documents do I need?',
-    a: 'You need your passport, academic certificates and transcripts, a medical report, an Interpol police clearance, recommendation letters and a few other items. The full list is on the Requirements page, with a short instruction for each document. You do not need to download or print the application form: you fill that in on this website.',
+    q: 'What documents do I need to study in China?',
+    a: 'Your passport, certificates and transcripts, a medical report, an Interpol police clearance, 2 recommendation letters and a few other items. The Requirements page lists each document with instructions. The application form itself is filled in on this site, so there is nothing to print.',
   },
   {
-    q: 'Are there any fees?',
-    a: 'The scholarship itself is free. No genuine scholarship asks you to pay for the award, and you should treat anyone who does as a scam. Our office charges a clearly stated service fee for guiding and processing your application. We tell you the full amount before you commit, and there are no hidden charges.',
+    q: 'Do I pay for the scholarship?',
+    a: 'No. The scholarship is free, and anyone who charges you for the award itself is running a scam. Our office charges a fixed service fee for placement and processing. You see the full amount before you commit, with no hidden charges.',
   },
   {
-    q: 'How long does the process take?',
-    a: 'It depends on the scholarship. Universities review applications in batches, and most applicants know their outcome 2 to 4 months after the deadline. We keep you updated while you wait and tell you as soon as we hear anything.',
+    q: 'Can I study in China without the CSCA exam?',
+    a: 'Yes. Several programmes need no CSCA exam. The CSCA exam column on the comparison page marks which ones require it.',
   },
   {
     q: 'Do I need to speak Chinese?',
-    a: 'No. The programmes we place students on are taught in English, and you will take basic Chinese classes in your first year to help with daily life. Some scholarships require the CSCA exam instead; each scholarship page tells you exactly what is needed.',
+    a: 'Not for the English-taught Bachelor’s programmes. The Chinese language programmes teach you the language. The Taught in column on the comparison page shows the teaching language of every programme.',
+  },
+  {
+    q: 'How long until I get a result?',
+    a: 'Most applicants hear 2 to 4 months after the scholarship deadline, because universities review applications in batches. The office updates you while you wait and calls as soon as a decision arrives.',
+  },
+  {
+    q: 'Where is the office?',
+    a: 'Universal House, Shop G14, Luwum Street, Kampala, Uganda. Walk in Monday to Friday, 9:00 to 17:00. No appointment needed.',
   },
 ]
+

@@ -248,7 +248,7 @@ export const steps: StepDef[] = [
             type: 'select',
             options: ['English-taught', 'Chinese-taught'],
           },
-          { name: 'durationFrom', label: 'Study period starts', placeholder: 'e.g. September 2026' },
+          { name: 'durationFrom', label: 'Study period starts', placeholder: 'Month and year' },
           { name: 'durationTo', label: 'Study period ends (expected)', placeholder: 'e.g. July 2030' },
           {
             name: 'university1',
@@ -387,7 +387,6 @@ export const formDefaults: Record<string, string> = {
   chineseProficiency: 'None',
   hskLevel: 'None',
   financialSupport: 'Family',
-  durationFrom: 'September 2026',
 }
 
 /* ---- Education history (repeatable) ---- */

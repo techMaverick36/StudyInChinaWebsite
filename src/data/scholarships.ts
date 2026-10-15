@@ -4,8 +4,8 @@ export type LevelKey = 'bachelor' | 'masters' | 'phd' | 'language'
 export interface Scholarship {
   id: string
   title: string
-  /* Column heading in the comparison table, where the full title is too long to
-     read. Falls back to the title with its level suffix stripped. */
+  /* Optional short label, editable in /admin. Not currently shown on the public
+     site; the comparison table and subject index use the full title. */
   shortTitle?: string
   levels: string
   levelKeys: LevelKey[]

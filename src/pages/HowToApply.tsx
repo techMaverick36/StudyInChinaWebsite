@@ -1,22 +1,21 @@
-import { useNavigate } from 'react-router-dom'
+import { ArrowRight } from 'lucide-react'
 import { usePageMeta } from '../lib/meta'
 import PageHero from '../components/PageHero'
+import Button from '../components/Button'
 import { photos, photoBlurs } from '../data/photos'
-import { guideSteps } from '../data/content'
+import { guideSteps, yourOwnCosts } from '../data/content'
 
 export default function HowToApply() {
-  const navigate = useNavigate()
   usePageMeta(
-    'How to Apply | StudyInChinaNow',
-    'How to apply for a scholarship in China from Africa: check you qualify, prepare your documents, and complete one online application. Four steps, about 15 minutes.',
+    'How to Apply for a Scholarship in China | StudyInChinaNow',
+    'How to apply for a Chinese university scholarship from Africa in 4 steps: check you qualify, prepare your documents, apply online in 15 minutes, and get a call from our Kampala office.',
   )
 
   return (
     <>
       <PageHero
-        eyebrow="How to apply"
-        title="A simple, step-by-step guide"
-        lede="Four steps, all online, about 15 minutes once your documents are ready."
+        title="How to apply for a scholarship in China"
+        lede="4 steps. The online form takes about 15 minutes once your documents are ready."
         photoNote="students being guided at the office"
         photo={photos.howToApply}
         blur={photoBlurs.howToApply}
@@ -34,23 +33,42 @@ export default function HowToApply() {
           ))}
         </div>
 
-        <div className="prep-box">
-          <h3 className="prep-title">Before you begin, prepare your documents</h3>
-          <p className="prep-body">
-            You will need scanned copies to finish the application. There is no
-            form to print: you fill in the official application form here and we
-            prepare it for you.
+        {/* What the award does not pay for. Sits with the steps so the cost of
+            going is clear before anyone starts the form. */}
+        <section className="costs-block" aria-labelledby="costs-h">
+          <h2 className="costs-h" id="costs-h">
+            What you pay for yourself
+          </h2>
+          <p className="costs-intro">
+            The scholarship covers tuition, in full or in part. Budget for these costs with your
+            family or sponsor before you apply.
           </p>
-          <button className="btn-outline-navy" onClick={() => navigate('/requirements')}>
+          <dl className="cost-list">
+            {yourOwnCosts.map((c) => (
+              <div className="cost-row" key={c.item}>
+                <dt>{c.item}</dt>
+                <dd>{c.note}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+
+        <div className="prep-box">
+          <h3 className="prep-title">Scan your documents before you start</h3>
+          <p className="prep-body">
+            The form asks you to upload scans or clear photos. The official application
+            form is filled in from your answers, so there is nothing to print.
+          </p>
+          <Button to="/requirements" variant="secondary">
             View required documents
-          </button>
+          </Button>
         </div>
 
         <div className="howto-cta-row">
-          <button className="btn-red-md" onClick={() => navigate('/apply')}>
+          <Button to="/apply" size="lg" icon={ArrowRight}>
             Start your application
-          </button>
-          <span className="howto-cta-note">Takes about 10–15 minutes.</span>
+          </Button>
+          <span className="howto-cta-note">Takes about 15 minutes.</span>
         </div>
       </div>
     </>

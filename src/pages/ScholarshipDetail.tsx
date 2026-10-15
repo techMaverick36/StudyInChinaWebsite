@@ -1,16 +1,15 @@
-import { useState } from 'react'
-import { Navigate, useNavigate, useParams } from 'react-router-dom'
+import { Navigate, useParams } from 'react-router-dom'
+import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { usePageMeta } from '../lib/meta'
-import { statusColorLight } from '../data/scholarships'
 import { useScholarship, useScholarshipStore } from '../lib/scholarshipStore'
 import { photos, photoBlurs } from '../data/photos'
 import HeroBackdrop from '../components/HeroBackdrop'
 import RichText from '../components/RichText'
+import Button from '../components/Button'
+import StatusBadge from '../components/StatusBadge'
 
 export default function ScholarshipDetail() {
   const { id } = useParams()
-  const navigate = useNavigate()
-  const [detailsOpen, setDetailsOpen] = useState(false)
   const { loading } = useScholarshipStore()
   const sel = useScholarship(id)
 
@@ -25,8 +24,6 @@ export default function ScholarshipDetail() {
      an unknown id is only really unknown once the load has settled. */
   if (!sel) return loading ? <div className="body-pad" /> : <Navigate to="/scholarships" replace />
 
-  const dotColor = statusColorLight(sel.status)
-
   return (
     <>
       <section className="page-hero detail">
@@ -36,17 +33,13 @@ export default function ScholarshipDetail() {
         />
         <div className="page-hero-shade deep" />
         <div className="page-hero-back-row">
-          <button className="hero-back" onClick={() => navigate('/scholarships')}>
-            ← All scholarships
-          </button>
+          <Button to="/scholarships" variant="text-light" icon={ArrowLeft} iconPosition="start">
+            All scholarships
+          </Button>
         </div>
         <div className="page-hero-inner detail-pad" style={{ maxWidth: 860 }}>
           <div className="hero-status-row">
-            <span className="hero-status-dot" style={{ background: dotColor }} />
-            <span className="hero-status-label" style={{ color: dotColor }}>
-              {sel.status}
-            </span>
-            <span className="hero-status-sep">·</span>
+            <StatusBadge status={sel.status} onDark />
             <span className="hero-status-close">{sel.closingLabel}</span>
           </div>
           <h1 className="page-title no-mb">{sel.title}</h1>
@@ -73,41 +66,36 @@ export default function ScholarshipDetail() {
         </div>
 
         <div className="detail-block">
-          <h2 className="detail-h mb16">Requirements</h2>
+          <h2 className="detail-h mb16">Who can apply</h2>
           <ul className="req-list">
             {sel.eligibility.map((e) => (
               <li className="req-item" key={e}>
-                <span className="req-bullet">·</span>
+                <span className="req-bullet" aria-hidden="true" />
                 <span>{e}</span>
               </li>
             ))}
           </ul>
         </div>
 
-        <div className="acc-box">
-          <button
-            className="acc-toggle"
-            onClick={() => setDetailsOpen((o) => !o)}
-            aria-expanded={detailsOpen}
-          >
-            <span>Details</span>
-            <span className="acc-sign">{detailsOpen ? '–' : '+'}</span>
-          </button>
-          {detailsOpen && (
-            <div className="acc-panel">
-              <RichText html={sel.funding} lead="What the award covers." className="acc-rich" />
-              <RichText html={sel.timeline} lead="Timeline." className="acc-rich" />
-              <RichText html={sel.fees} lead="Fees." className="acc-rich" />
+        {/* Funding, timeline and fees stay on the page rather than behind a
+            toggle: they are what students and sponsors come to check, and
+            search engines read only what the page shows. */}
+        {[
+          { title: 'What the award covers', html: sel.funding },
+          { title: 'Timeline', html: sel.timeline },
+          { title: 'Fees', html: sel.fees },
+        ]
+          .filter((b) => b.html.trim())
+          .map((b) => (
+            <div className="detail-block" key={b.title}>
+              <h2 className="detail-h">{b.title}</h2>
+              <RichText html={b.html} className="detail-rich" />
             </div>
-          )}
-        </div>
+          ))}
 
-        <button
-          className="btn-red-md"
-          onClick={() => navigate(`/apply?scholarship=${sel.id}`)}
-        >
-          Apply Now
-        </button>
+        <Button to={`/apply?scholarship=${sel.id}`} size="lg" icon={ArrowRight}>
+          Apply for this scholarship
+        </Button>
       </div>
     </>
   )

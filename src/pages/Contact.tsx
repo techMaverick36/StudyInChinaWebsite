@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
-import { usePageMeta } from '../lib/meta'
+import { useJsonLd, usePageMeta } from '../lib/meta'
 import PageHero from '../components/PageHero'
 import { photos, photoBlurs } from '../data/photos'
 import { contact, faqs } from '../data/content'
 import { submitContactMessage } from '../lib/submit'
+import { ChevronDown, MessageCircle } from 'lucide-react'
+import Button from '../components/Button'
 
 export default function Contact() {
   const [openFaq, setOpenFaq] = useState<number>(0)
@@ -13,9 +15,21 @@ export default function Contact() {
   const [sent, setSent] = useState(false)
 
   usePageMeta(
-    'Contact Us | StudyInChinaNow',
-    'Ask about scholarships, documents or deadlines. Call, email, WhatsApp or visit the office at Universal House, Luwum Street, Kampala. Frequently asked questions answered.',
+    'Contact Our Kampala Office | StudyInChinaNow',
+    'Call +256 701 458000, WhatsApp or visit Universal House, Luwum Street, Kampala, Monday to Friday 9:00 to 17:00. Answers on eligibility, documents, fees and the CSCA exam.',
   )
+
+  /* The questions are what students type into Google, so they are published
+     as FAQPage data that search results can show directly. */
+  useJsonLd('faq', {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  })
 
   const [sendError, setSendError] = useState('')
 
@@ -41,9 +55,8 @@ export default function Contact() {
   return (
     <>
       <PageHero
-        eyebrow="Contact"
-        title="Get in touch"
-        lede="Call, write or visit the office. There is no charge for asking."
+        title="Contact our Kampala office"
+        lede="Call, WhatsApp or walk in on Luwum Street. Questions cost nothing."
         photoNote="the office on Luwum Street"
         photo={photos.contact}
         blur={photoBlurs.contact}
@@ -79,25 +92,27 @@ export default function Contact() {
               <div className="contact-label">Office hours</div>
               <div className="contact-value">{contact.hours}</div>
             </div>
-            <a
-              className="whatsapp-btn contact-whatsapp-full"
+            <Button
+              variant="whatsapp"
+              icon={MessageCircle}
+              iconPosition="start"
+              fullWidth
+              className="contact-whatsapp-full"
               href={contact.whatsappUrl}
               target="_blank"
               rel="noreferrer"
             >
               Message us on WhatsApp
-            </a>
+            </Button>
             <p className="contact-visit-note">
-              You are welcome to visit the office in person. No appointment is
-              needed during office hours.
+              Walk in during office hours. No appointment needed.
             </p>
           </aside>
 
           <div className="contact-form-card">
-            <h2 className="contact-form-title">Send us a message</h2>
+            <h2 className="contact-form-title">Send a message</h2>
             <p className="contact-form-intro">
-              Tell us what you would like to know and we will reply within one
-              working day.
+              Write your question below. Replies go out within 1 working day.
             </p>
             <form onSubmit={onSubmit}>
               <div className="contact-field-stack">
@@ -137,20 +152,19 @@ export default function Contact() {
                     rows={6}
                     value={form.message}
                     onChange={(e) => setForm({ ...form, message: e.target.value })}
-                    placeholder="Tell us what you would like to know"
+                    placeholder="Your question about scholarships, documents or fees"
                     required
                     style={{ resize: 'vertical' }}
                   />
                 </div>
               </div>
               <div className="contact-submit-row">
-                <button className="btn-red-md" type="submit" disabled={sending}>
+                <Button type="submit" disabled={sending}>
                   {sending ? 'Sending…' : 'Send message'}
-                </button>
+                </Button>
                 {sent && (
                   <p className="contact-form-note">
-                    Thank you. Your message has been received. We reply within one
-                    working day.
+                    Message received. Expect a reply within 1 working day.
                   </p>
                 )}
                 {sendError && (
@@ -176,21 +190,14 @@ export default function Contact() {
                 >
                   <span>{f.q}</span>
                   <span className={`faq-chevron${open ? ' open' : ''}`}>
-                    <svg
-                      width="15"
-                      height="15"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2.4"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <polyline points="6 9 12 15 18 9" />
-                    </svg>
+                    <ChevronDown size={16} strokeWidth={2.4} aria-hidden="true" />
                   </span>
                 </button>
-                {open && <p className="faq-a">{f.a}</p>}
+                {/* Closed answers stay in the page, hidden, so they are still read
+                    by search engines and found by in-page search. */}
+                <p className="faq-a" hidden={!open}>
+                  {f.a}
+                </p>
               </div>
             )
           })}

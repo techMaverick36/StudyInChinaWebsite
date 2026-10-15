@@ -8,6 +8,8 @@ import type { EducationRow, EmploymentRow } from '../data/applicationForm'
 import { documents } from '../data/content'
 import { safeFileName, zipSync } from '../lib/zip'
 import AdminScholarships from './AdminScholarships'
+import { ChevronLeft, ChevronRight, Link2, X } from 'lucide-react'
+import Button from '../components/Button'
 
 /* Internal admin panel (not linked from the public navigation, reached at
    /admin). Requires a Supabase login; accounts are created by invitation
@@ -123,7 +125,7 @@ function DocThumb({ doc }: { doc: PreviewDoc }) {
   }
   return (
     <span className={`doc-thumb doc-thumb-icon kind-${doc.kind}`}>
-      {doc.kind === 'pdf' ? 'PDF' : doc.kind === 'link' ? '↗' : extOf(doc.name).toUpperCase().slice(0, 4) || 'FILE'}
+      {doc.kind === 'pdf' ? 'PDF' : doc.kind === 'link' ? <Link2 size={18} aria-label="Link" /> : extOf(doc.name).toUpperCase().slice(0, 4) || 'FILE'}
     </span>
   )
 }
@@ -191,7 +193,7 @@ function DocViewer({
             </a>
           )}
           <button className="viewer-btn viewer-close" onClick={onClose} aria-label="Close preview">
-            ✕
+            <X size={16} strokeWidth={2.25} aria-hidden="true" />
           </button>
         </div>
 
@@ -202,7 +204,7 @@ function DocViewer({
               onClick={() => onIndex(index - 1)}
               aria-label="Previous document"
             >
-              ‹
+              <ChevronLeft size={26} aria-hidden="true" />
             </button>
           )}
 
@@ -240,7 +242,7 @@ function DocViewer({
               onClick={() => onIndex(index + 1)}
               aria-label="Next document"
             >
-              ›
+              <ChevronRight size={26} aria-hidden="true" />
             </button>
           )}
         </div>
@@ -374,9 +376,9 @@ function Login() {
           />
         </div>
         <div className="admin-login-row">
-          <button className="btn-red-md" type="submit" disabled={busy}>
+          <Button type="submit" disabled={busy}>
             {busy ? 'Signing in…' : 'Sign in'}
-          </button>
+          </Button>
         </div>
       </form>
       {error && (
@@ -685,9 +687,9 @@ function Dashboard() {
   return (
     <AdminShell
       action={
-        <button className="btn-outline-light" onClick={signOut}>
+        <Button variant="outline-light" onClick={signOut}>
           Sign out
-        </button>
+        </Button>
       }
     >
       <div className="admin-stats">
@@ -747,12 +749,12 @@ function Dashboard() {
       {tab === 'applications' && (
         <>
           <div className="admin-toolbar">
-            <button className="btn-outline-navy" onClick={refresh} disabled={loading}>
+            <Button variant="secondary" onClick={refresh} disabled={loading}>
               {loading ? 'Loading…' : 'Refresh'}
-            </button>
-            <button className="btn-red-md" onClick={exportCsv} disabled={activeApps.length === 0}>
+            </Button>
+            <Button onClick={exportCsv} disabled={activeApps.length === 0}>
               Export CSV
-            </button>
+            </Button>
           </div>
           {activeApps.length === 0 && !loading ? (
             <p className="admin-empty">No applications yet.</p>
@@ -829,15 +831,16 @@ function Dashboard() {
                       <div className="admin-docs-head">
                         <h3 className="admin-sub">Documents</h3>
                         {docsOf(r).some((d) => d.path) && (
-                          <button
-                            className="btn-outline-navy admin-btn-sm"
+                          <Button
+                            variant="secondary"
+                            size="sm"
                             onClick={() => void downloadAll(r)}
                             disabled={!!zipping}
                           >
                             {zipping?.id === r.id
                               ? `Preparing ${zipping.done} of ${zipping.total}…`
                               : 'Download all as ZIP'}
-                          </button>
+                          </Button>
                         )}
                       </div>
                       {Object.keys(r.uploads ?? {}).length === 0 ? (
@@ -901,18 +904,19 @@ function Dashboard() {
                               Move this application to the trash? Nothing is
                               deleted yet; you can restore it from the Trash tab.
                             </span>
-                            <button
-                              className="btn-red-md admin-btn-sm"
+                            <Button
+                              size="sm"
                               onClick={() => void moveToTrash(r.id)}
                             >
                               Yes, move to trash
-                            </button>
-                            <button
-                              className="btn-outline-navy admin-btn-sm"
+                            </Button>
+                            <Button
+                              variant="secondary"
+                              size="sm"
                               onClick={() => setTrashAskId(null)}
                             >
                               Cancel
-                            </button>
+                            </Button>
                           </>
                         ) : (
                           <button
@@ -950,12 +954,13 @@ function Dashboard() {
                     <span className="admin-item-meta">
                       {r.scholarship_title} · {r.level} · trashed {fmtDate(r.deleted_at!)}
                     </span>
-                    <button
-                      className="btn-outline-navy admin-btn-sm"
+                    <Button
+                      variant="secondary"
+                      size="sm"
                       onClick={() => void restore(r.id)}
                     >
                       Restore
-                    </button>
+                    </Button>
                     <button
                       className="admin-trash-link"
                       onClick={() => {
@@ -983,22 +988,23 @@ function Dashboard() {
                           placeholder="Type DELETE"
                           aria-label="Type DELETE to confirm"
                         />
-                        <button
-                          className="btn-red-md admin-btn-sm"
+                        <Button
+                          size="sm"
                           disabled={purgeText !== 'DELETE' || purging}
                           onClick={() => void deleteForever(r)}
                         >
                           {purging ? 'Deleting…' : 'Delete permanently'}
-                        </button>
-                        <button
-                          className="btn-outline-navy admin-btn-sm"
+                        </Button>
+                        <Button
+                          variant="secondary"
+                          size="sm"
                           onClick={() => {
                             setPurgeAskId(null)
                             setPurgeText('')
                           }}
                         >
                           Cancel
-                        </button>
+                        </Button>
                       </div>
                     </div>
                   )}
@@ -1119,9 +1125,9 @@ function AccountPanel() {
             autoComplete="new-password"
           />
         </div>
-        <button className="btn-red-md" type="submit" disabled={busy}>
+        <Button type="submit" disabled={busy}>
           {busy ? 'Saving…' : 'Save password'}
-        </button>
+        </Button>
       </form>
       {note && <p className="contact-form-note">{note}</p>}
       {error && (

@@ -1,9 +1,13 @@
 import type { ReactNode } from 'react'
+import { ArrowLeft } from 'lucide-react'
 import HeroBackdrop from './HeroBackdrop'
+import Button from './Button'
 
 interface PageHeroProps {
-  eyebrow: string
+  eyebrow?: string
   title: string
+  /* Inner pages link back to their parent from the top of the hero. */
+  back?: { to: string; label: string }
   lede?: string
   photoNote: string
   /* URL of the real photograph. When empty the striped placeholder shows. */
@@ -24,6 +28,7 @@ interface PageHeroProps {
 export default function PageHero({
   eyebrow,
   title,
+  back,
   lede,
   photoNote,
   photo,
@@ -36,15 +41,22 @@ export default function PageHero({
   children,
 }: PageHeroProps) {
   return (
-    <section className="page-hero">
+    <section className={`page-hero${back ? ' with-back' : ''}`}>
       <HeroBackdrop src={photo} blur={blur} />
       <div className={`page-hero-shade${deepShade ? ' deep' : ''}`} />
       {!photo && <span className="photo-badge">PHOTO — {photoNote}</span>}
+      {back && (
+        <div className="page-hero-back-row" style={{ maxWidth }}>
+          <Button to={back.to} variant="text-light" icon={ArrowLeft} iconPosition="start">
+            {back.label}
+          </Button>
+        </div>
+      )}
       <div
         className={`page-hero-inner${applyPad ? ' apply-pad' : ''}`}
         style={{ maxWidth }}
       >
-        <p className="eyebrow-hero">{eyebrow}</p>
+        {eyebrow && <p className="eyebrow-hero">{eyebrow}</p>}
         <h1
           className={`page-title${titleNoMargin ? ' no-mb' : ''}${applyTitleSize ? ' apply-size' : ''}`}
         >

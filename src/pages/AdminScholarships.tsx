@@ -11,6 +11,7 @@ import {
 } from '../lib/scholarshipStore'
 import type { AdminScholarship, ScholarshipRow } from '../lib/scholarshipStore'
 import { BulletListField, RichTextField } from '../components/RichTextEditor'
+import Button from '../components/Button'
 
 /* Scholarships tab of the admin panel: the office adds, edits, reorders and
    removes the programmes shown on the public site. Everything here writes to
@@ -260,18 +261,17 @@ export default function AdminScholarships() {
   return (
     <>
       <div className="admin-toolbar">
-        <button className="btn-outline-navy" onClick={() => void load()} disabled={loading || busy}>
+        <Button variant="secondary" onClick={() => void load()} disabled={loading || busy}>
           {loading ? 'Loading…' : 'Refresh'}
-        </button>
-        <button
-          className="btn-red-md"
+        </Button>
+        <Button
           onClick={() => {
             setNote('')
             setEditing(blankScholarship(nextSortOrder))
           }}
         >
           Add a scholarship
-        </button>
+        </Button>
       </div>
 
       <p className="admin-hint" style={{ margin: '0 0 16px' }}>
@@ -302,9 +302,9 @@ export default function AdminScholarships() {
             to start editing them here, or add a scholarship from scratch.
             Nothing on the public site changes until you publish.
           </p>
-          <button className="btn-red-md" onClick={() => void importSeed()} disabled={busy}>
+          <Button onClick={() => void importSeed()} disabled={busy}>
             {busy ? 'Copying…' : 'Copy the built-in programmes in'}
-          </button>
+          </Button>
         </div>
       ) : (
         <div className="admin-list">
@@ -337,17 +337,19 @@ export default function AdminScholarships() {
                 <span className={`admin-status-chip s-${r.published ? 'placed' : 'new'}`}>
                   {r.published ? 'Published' : 'Draft'}
                 </span>
-                <button
-                  className="btn-outline-navy admin-btn-sm"
+                <Button
+                  variant="secondary"
+                  size="sm"
                   onClick={() => {
                     setNote('')
                     setEditing(r)
                   }}
                 >
                   Edit
-                </button>
-                <button
-                  className="btn-outline-navy admin-btn-sm"
+                </Button>
+                <Button
+                  variant="secondary"
+                  size="sm"
                   onClick={() => void togglePublished(r)}
                   disabled={busy || pendingId === r.id}
                   title={
@@ -361,7 +363,7 @@ export default function AdminScholarships() {
                     : r.published
                       ? 'Unpublish'
                       : 'Publish'}
-                </button>
+                </Button>
                 <button
                   className="admin-trash-link"
                   onClick={() => setDeleteAskId(deleteAskId === r.id ? null : r.id)}
@@ -378,19 +380,20 @@ export default function AdminScholarships() {
                     only want it off the site for now, unpublish it instead.
                   </p>
                   <div className="admin-danger-row">
-                    <button
-                      className="btn-red-md admin-btn-sm"
+                    <Button
+                      size="sm"
                       onClick={() => void remove(r)}
                       disabled={busy}
                     >
                       {busy ? 'Deleting…' : 'Delete permanently'}
-                    </button>
-                    <button
-                      className="btn-outline-navy admin-btn-sm"
+                    </Button>
+                    <Button
+                      variant="secondary"
+                      size="sm"
                       onClick={() => setDeleteAskId(null)}
                     >
                       Cancel
-                    </button>
+                    </Button>
                   </div>
                 </div>
               )}
@@ -523,7 +526,7 @@ function ScholarshipEditor({
       </Field>
       <Field
         label="Short name"
-        help="Used as the column heading in the comparison table, where the full title is too long. Optional."
+        help="Not shown on the public site at the moment: the comparison table and subject list both use the full title. Optional."
       >
         <input
           className="field-input"
@@ -681,13 +684,14 @@ function ScholarshipEditor({
           </button>
         </div>
       ))}
-      <button
-        className="btn-outline-navy admin-btn-sm"
+      <Button
+        variant="secondary"
+        size="sm"
         type="button"
         onClick={() => set('facts', [...record.facts, { label: '', value: '' }])}
       >
         Add a fact
-      </button>
+      </Button>
 
       <h3 className="admin-sub">Comparison table</h3>
       <p className="admin-hint">
@@ -759,12 +763,12 @@ function ScholarshipEditor({
       )}
 
       <div className="admin-editor-actions">
-        <button className="btn-red-md" onClick={submit} disabled={busy}>
+        <Button onClick={submit} disabled={busy}>
           {busy ? 'Saving…' : isNew ? 'Add scholarship' : 'Save changes'}
-        </button>
-        <button className="btn-outline-navy" onClick={onCancel} disabled={busy}>
+        </Button>
+        <Button variant="secondary" onClick={onCancel} disabled={busy}>
           Cancel
-        </button>
+        </Button>
       </div>
     </div>
   )
