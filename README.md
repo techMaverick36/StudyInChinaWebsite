@@ -16,13 +16,67 @@ colours, fonts, section order and button placement follow the prototype exactly.
 
 ```bash
 npm run dev      # start the dev server
-npm run build    # type-check and build to dist/
+npm run build    # type-check, build, and prerender every public page to dist/
 npm run preview  # serve the production build locally
 ```
 
-Note: this is a single-page app. When deploying, configure the host to serve
-`index.html` for all routes (most static hosts call this "SPA fallback" or
-"rewrite all to index.html").
+## Prerendered pages
+
+`npm run build` writes a real HTML file for every public address, so WhatsApp
+and Facebook link previews, and search engines, see each page's own title,
+description and content without running JavaScript:
+
+1. `vite build` builds the browser app into `dist/`.
+2. `vite build --ssr src/entry-server.tsx` builds the same app for Node into
+   `dist-ssr/`.
+3. `scripts/prerender.mjs` reads the published scholarships from Supabase,
+   renders `/`, `/scholarships`, `/scholarships/compare`,
+   `/scholarships/subjects`, `/scholarships/<id>` for every programme,
+   `/requirements`, `/how-to-apply`, `/contact` and `/apply`, and writes each
+   one (`dist/index.html`, `dist/scholarships/compare.html`, …) with its
+   `<title>`, meta description, Open Graph tags, canonical link and JSON-LD.
+   It also writes `dist/sitemap.xml`, and keeps the empty app shell as
+   `dist/spa-fallback.html`.
+
+In the browser React takes over the prerendered HTML (`hydrateRoot` in
+`src/main.tsx`) and the site behaves as before. Pages set their head with
+`usePageMeta` / `useJsonLd` (`src/lib/meta.ts`), which feed both the prerender
+and the browser. `/admin` is not prerendered: Netlify serves it, and any address
+without its own file, from the shell (see `netlify.toml`), and it stays out of
+search through `robots.txt` and the `X-Robots-Tag: noindex` header.
+
+The production address `https://studyinchinanow.com` lives in `src/lib/site.ts`
+(canonical links, `og:url`, sitemap) and in `public/robots.txt`. In Netlify →
+Domain management, keep `studyinchinanow.com` as the primary domain so
+`www.studyinchinanow.com` redirects to it.
+
+Builds need `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in Netlify's
+environment variables (they are already needed by the browser app). If
+Supabase is configured but the scholarships query fails, the build stops on
+purpose, so Netlify keeps the last good deploy rather than publishing
+out-of-date programmes.
+
+### Publishing changes to the static pages
+
+Visitors' browsers always load the live programmes from Supabase, so an edit
+saved in `/admin` shows on the site straight away. The prerendered HTML (link
+previews, search engines, a new programme's own page and its sitemap entry)
+only changes when the site is rebuilt. To rebuild automatically on every
+change, connect Supabase to a Netlify build hook (one-time setup, no code):
+
+1. Netlify → Site configuration → Build & deploy → Continuous deployment →
+   **Build hooks** → Add build hook. Name it "Scholarships changed", branch
+   `main`. Copy the URL it gives you.
+2. Supabase → Database → **Webhooks** → Create a new hook. Table
+   `scholarships`; events Insert, Update and Delete; type HTTP Request; method
+   POST; URL the build hook from step 1. Save.
+
+Every save, publish, unpublish, reorder or delete in the Scholarships tab then
+starts a Netlify build, and the new pages are live a minute or two later.
+Several quick edits queue several builds; the last one wins. Keep the build
+hook URL out of the code and out of `VITE_` variables: anyone holding it can
+start builds. Without the hook, use Netlify → Deploys → Trigger deploy after
+editing.
 
 ## Where things live
 
@@ -55,7 +109,9 @@ confirmation screen.
 
 The programmes on the public site come from the `scholarships` table in
 Supabase, edited from the **Scholarships** tab at `/admin`: add, edit, reorder,
-publish, unpublish and delete. Nothing needs a deploy.
+publish, unpublish and delete. Visitors see changes at once; the prerendered
+pages catch up on the next build (see "Publishing changes to the static
+pages" above).
 
 The list in `src/data/scholarships.ts` is the **fallback**. It is what visitors
 see when Supabase is not configured, the query fails, or no programmes have been

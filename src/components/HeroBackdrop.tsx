@@ -38,6 +38,11 @@ export default function HeroBackdrop({ src, blur, position = 'center' }: HeroBac
         decoding="async"
         style={{ objectPosition: position }}
         onLoad={() => setLoaded(true)}
+        /* On a prerendered page the photo can finish loading before React
+           attaches onLoad, so also check once the element is in place. */
+        ref={(img) => {
+          if (img?.complete && img.naturalWidth > 0) setLoaded(true)
+        }}
       />
     </>
   )

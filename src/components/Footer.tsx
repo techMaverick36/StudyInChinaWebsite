@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { contact } from '../data/content'
 
 const footerLinks = [
@@ -10,7 +10,6 @@ const footerLinks = [
 ]
 
 export default function Footer() {
-  const navigate = useNavigate()
   return (
     <footer className="site-footer">
       <div className="footer-grid">
@@ -19,17 +18,17 @@ export default function Footer() {
             <span className="footer-brand-name">StudyInChinaNow</span>
           </div>
           <p className="footer-blurb">
-            A placement service helping African students study at
-            Chinese universities on scholarship.
+            Scholarship placement for African students at accredited
+            Chinese universities. Office in Kampala, Uganda.
           </p>
         </div>
         <div>
           <div className="footer-head">Pages</div>
           <div className="footer-links">
             {footerLinks.map((l) => (
-              <button key={l.path} className="footer-link" onClick={() => navigate(l.path)}>
+              <Link key={l.path} className="footer-link" to={l.path}>
                 {l.label}
-              </button>
+              </Link>
             ))}
           </div>
         </div>
@@ -43,15 +42,17 @@ export default function Footer() {
               </span>
             ))}
             <br />
-            {contact.phone}
+            <a href={`tel:${contact.phone.replace(/s+/g, '')}`}>{contact.phone}</a>
             <br />
-            {contact.email}
+            <a href={`mailto:${contact.email}`}>{contact.email}</a>
           </div>
         </div>
       </div>
       <div className="footer-bottom">
-        <div className="footer-bottom-inner">
-          © 2026 StudyInChinaNow. A service of Enjosh Investments Limited.
+        {/* The year in the prerendered HTML is the build's; across New Year the
+            browser's differs, which is expected rather than a hydration bug. */}
+        <div className="footer-bottom-inner" suppressHydrationWarning>
+          © {new Date().getFullYear()} StudyInChinaNow. A service of Enjosh Investments Limited.
         </div>
       </div>
     </footer>

@@ -31,7 +31,16 @@ export function plainToHtml(v: string): string {
 export const toEditorHtml = (v: string): string =>
   !v?.trim() ? '' : looksLikeHtml(v) ? v : plainToHtml(v)
 
+let purifier = DOMPurify
 let linkHookAdded = false
+
+/* DOMPurify needs a DOM to work with. The browser has one; the build-time
+   prerender runs in Node and hands in a jsdom window here, so the static HTML
+   is sanitised exactly as the browser would sanitise it. */
+export function setSanitizerWindow(win: Parameters<typeof DOMPurify>[0]) {
+  purifier = DOMPurify(win)
+  linkHookAdded = false
+}
 
 /* HTML that is safe to put on a public page. Anything outside the allow-list
    is dropped, script links are removed, and every link opens in a new tab
@@ -39,8 +48,11 @@ let linkHookAdded = false
 export function toSafeHtml(v: string): string {
   if (!v?.trim()) return ''
   if (!looksLikeHtml(v)) return plainToHtml(v)
+  if (!purifier.isSupported) {
+    throw new Error('toSafeHtml needs a DOM: call setSanitizerWindow first when rendering outside the browser.')
+  }
   if (!linkHookAdded) {
-    DOMPurify.addHook('afterSanitizeAttributes', (node) => {
+    purifier.addHook('afterSanitizeAttributes', (node) => {
       if (node.tagName === 'A') {
         node.setAttribute('target', '_blank')
         node.setAttribute('rel', 'noopener noreferrer')
@@ -48,5 +60,5 @@ export function toSafeHtml(v: string): string {
     })
     linkHookAdded = true
   }
-  return DOMPurify.sanitize(v, { ALLOWED_TAGS, ALLOWED_ATTR })
+  return purifier.sanitize(v, { ALLOWED_TAGS, ALLOWED_ATTR })
 }

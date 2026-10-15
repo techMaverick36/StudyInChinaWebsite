@@ -133,10 +133,29 @@ export interface ScholarshipStore {
 
 export const ScholarshipsContext = createContext<ScholarshipStore | null>(null)
 
+/* The published programmes in display order, or an empty list when Supabase
+   is not configured. Throws when the query fails. Used by the provider in the
+   browser and by the build-time prerender, so both read the same rows. */
+export async function fetchPublishedScholarships(): Promise<Scholarship[]> {
+  if (!supabase) return []
+  const { data, error } = await supabase
+    .from(SCHOLARSHIPS_TABLE)
+    .select('*')
+    .eq('published', true)
+    .order('sort_order', { ascending: true })
+    .order('created_at', { ascending: true })
+  if (error) throw new Error(error.message)
+  return ((data as ScholarshipRow[] | null) ?? []).map(fromRow)
+}
+
 /* Builds the value the provider hands down. Kept here so the provider file is
-   nothing but the component. */
-export function useScholarshipsValue(): ScholarshipStore {
-  const [rows, setRows] = useState<Scholarship[] | null>(null)
+   nothing but the component.
+
+   `initial` is the list the page was prerendered with (null when the build
+   used the built-in programmes). Starting from it makes the first render in
+   the browser match the static HTML; the live list replaces it once loaded. */
+export function useScholarshipsValue(initial: Scholarship[] | null = null): ScholarshipStore {
+  const [rows, setRows] = useState<Scholarship[] | null>(initial)
   const [loading, setLoading] = useState(!!supabase)
 
   const load = useCallback(async () => {
@@ -145,17 +164,15 @@ export function useScholarshipsValue(): ScholarshipStore {
       setLoading(false)
       return
     }
-    const { data, error } = await supabase
-      .from(SCHOLARSHIPS_TABLE)
-      .select('*')
-      .eq('published', true)
-      .order('sort_order', { ascending: true })
-      .order('created_at', { ascending: true })
-    /* Any failure here (table not created yet, network down, RLS) falls back to
-       the built-in programmes rather than showing the visitor nothing. */
-    if (error) console.error('Could not load scholarships:', error.message)
-    const list = error ? null : ((data as ScholarshipRow[] | null) ?? []).map(fromRow)
-    setRows(list && list.length > 0 ? list : null)
+    /* On a failure (table not created yet, network down, RLS) the list on
+       screen stays: the one the page was prerendered with, or else the
+       built-in programmes, so the visitor never sees nothing. */
+    try {
+      const list = await fetchPublishedScholarships()
+      setRows(list.length > 0 ? list : null)
+    } catch (err) {
+      console.error('Could not load scholarships:', err instanceof Error ? err.message : err)
+    }
     setLoading(false)
   }, [])
 

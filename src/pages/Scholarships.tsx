@@ -1,79 +1,30 @@
-import { useNavigate } from 'react-router-dom'
 import { usePageMeta } from '../lib/meta'
 import PageHero from '../components/PageHero'
-import { statusColor } from '../data/scholarships'
+import ScholarshipCard from '../components/ScholarshipCard'
+import SectionHeader from '../components/SectionHeader'
+import LinkCard from '../components/LinkCard'
+import CtaBand from '../components/CtaBand'
 import { useScholarships } from '../lib/scholarshipStore'
 import { photos, photoBlurs } from '../data/photos'
-import { yourOwnCosts } from '../data/content'
 
-/* Short answer to "which one is for me", keyed off study level, the CSCA exam
-   and the award, which are the things that actually decide it. */
-const chooseBy = [
-  {
-    id: 'henan-masters',
-    when: "You already hold a Bachelor's degree",
-    then: 'The Henan programme is the Master’s option, with 15 subjects and no entrance exam.',
-  },
-  {
-    id: 'hubei-english-taught',
-    when: 'You have not sat the CSCA exam',
-    then: 'Start with the Hubei programme. No exam is required and every course is taught in English.',
-  },
-  {
-    id: 'top-ranking-bachelor',
-    when: 'You have strong CSCA results',
-    then: 'The top-ranking university award turns a first-class result into free tuition.',
-  },
-  {
-    id: 'tuition-free-bachelor',
-    when: 'You want tuition covered whatever your result',
-    then: 'The tuition-free programme covers every admitted student. Places close first.',
-  },
-  {
-    id: 'beijing-chinese-language',
-    when: 'You want to learn Chinese first',
-    then: 'The Beijing language course runs a year and costs 5,000 RMB after the scholarship.',
-  },
-  {
-    id: 'shijiazhuang-language-csca',
-    when: 'You want to prepare for the CSCA in China',
-    then: 'Shijiazhuang pairs Chinese language with CSCA preparation, or with Traditional Chinese Medicine.',
-  },
-]
-
+/* The listing stays short: the programmes themselves, then the way into the
+   detail. The side-by-side comparison and the subject index each have their
+   own page under /scholarships. */
 export default function Scholarships() {
-  const navigate = useNavigate()
   const scholarships = useScholarships()
+  const subjectCount = new Set(
+    scholarships.flatMap((s) => s.majors.map((m) => m.replace(/\s*\(self-funded\)$/, ''))),
+  ).size
   usePageMeta(
-    'Available Scholarships | StudyInChinaNow',
-    'Scholarships for African students at Chinese universities for the September 2026 intake, with tuition covered in full or in part. Compare what each one covers and who can apply.',
+    'Scholarships in China Open to African Students | StudyInChinaNow',
+    `${scholarships.length} scholarships at Chinese universities open to African students: Bachelor's, Master's and Chinese language. See what each one covers, who can apply and when it closes.`,
   )
-
-  const shortName = (s: { title: string; shortTitle?: string }) =>
-    s.shortTitle ?? s.title.replace(/ (Bachelor|Master's) Scholarship$/, '')
-
-  /* The shortcuts below are written against particular programmes. Once the
-     office edits the list at /admin one of them may no longer exist, so only
-     the ones that still point somewhere are shown. */
-  const shortcuts = chooseBy.filter((c) => scholarships.some((s) => s.id === c.id))
-
-  /* Students look for a subject, not a scholarship name, so the majors are
-     indexed the way they search. */
-  const bySubject = new Map<string, string[]>()
-  for (const s of scholarships) {
-    for (const m of s.majors) {
-      const key = m.replace(/\s*\(self-funded\)$/, '')
-      bySubject.set(key, [...(bySubject.get(key) ?? []), shortName(s)])
-    }
-  }
-  const subjects = [...bySubject.entries()].sort((a, b) => a[0].localeCompare(b[0]))
 
   return (
     <>
       <PageHero
-        eyebrow="Programmes"
-        title="Available scholarships"
-        lede="The programmes we are placing students on now. Open one to see what it covers and who can apply."
+        title="Scholarships open to African students"
+        lede={`${scholarships.length} programmes at Chinese universities. Open a programme to see its intake, what it covers and who can apply.`}
         photoNote="university campus in China"
         photo={photos.scholarships}
         blur={photoBlurs.scholarships}
@@ -81,205 +32,35 @@ export default function Scholarships() {
       />
 
       <div className="container body-pad">
-        <div className="sgrid">
+        <div className="card-grid">
           {scholarships.map((c) => (
-            <div className="scard" key={c.id}>
-              <div className="scard-status">
-                <span className="scard-dot" style={{ background: statusColor(c.status) }} />
-                <span className="scard-status-label" style={{ color: statusColor(c.status) }}>
-                  {c.status}
-                </span>
-              </div>
-              <h2 className="scard-title">{c.title}</h2>
-              <div className="scard-levels">{c.levels}</div>
-              <div className="scard-loc">{c.location}</div>
-              <p className="scard-blurb">{c.blurb}</p>
-              <div className="scard-foot">
-                <span className="scard-close">{c.closingLabel}</span>
-                <button
-                  className="scard-view"
-                  onClick={() => navigate(`/scholarships/${c.id}`)}
-                >
-                  View details →
-                </button>
-              </div>
-            </div>
+            <ScholarshipCard key={c.id} scholarship={c} />
           ))}
         </div>
       </div>
 
-      {/* Side by side comparison */}
-      <section className="section-tint">
+      <section className="section-ruled">
         <div className="container section-pad">
-          <p className="eyebrow-red">Side by side</p>
-          <h2 className="sec-title">Compare the programmes</h2>
-          <div className="compare-scroll">
-            <table className="compare-table">
-              <thead>
-                <tr>
-                  <th scope="col">&nbsp;</th>
-                  {scholarships.map((s) => (
-                    <th scope="col" key={s.id}>
-                      {shortName(s)}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th scope="row">Level</th>
-                  {scholarships.map((s) => (
-                    <td key={s.id}>{s.levels}</td>
-                  ))}
-                </tr>
-                <tr>
-                  <th scope="row">Tuition</th>
-                  {scholarships.map((s) => (
-                    <td key={s.id}>{s.compare.tuition}</td>
-                  ))}
-                </tr>
-                <tr>
-                  <th scope="row">Accommodation</th>
-                  {scholarships.map((s) => (
-                    <td key={s.id}>{s.compare.accommodation}</td>
-                  ))}
-                </tr>
-                <tr>
-                  <th scope="row">CSCA exam</th>
-                  {scholarships.map((s) => (
-                    <td key={s.id}>
-                      <span className={s.cscaRequired ? 'flag-need' : 'flag-no'}>
-                        {s.cscaRequired ? 'Required' : 'Not needed'}
-                      </span>
-                    </td>
-                  ))}
-                </tr>
-                <tr>
-                  <th scope="row">Taught in</th>
-                  {scholarships.map((s) => (
-                    <td key={s.id}>{s.compare.taughtIn}</td>
-                  ))}
-                </tr>
-                <tr>
-                  <th scope="row">Open to</th>
-                  {scholarships.map((s) => (
-                    <td key={s.id}>{s.compare.openTo}</td>
-                  ))}
-                </tr>
-                <tr>
-                  <th scope="row">Majors</th>
-                  {scholarships.map((s) => (
-                    <td key={s.id}>{s.majors.length} to choose from</td>
-                  ))}
-                </tr>
-                <tr>
-                  <th scope="row">Extra award</th>
-                  {scholarships.map((s) => (
-                    <td key={s.id}>{s.compare.extraAward}</td>
-                  ))}
-                </tr>
-                <tr>
-                  <th scope="row">Intake</th>
-                  {scholarships.map((s) => (
-                    <td key={s.id}>{s.closingLabel}</td>
-                  ))}
-                </tr>
-                <tr>
-                  <th scope="row">&nbsp;</th>
-                  {scholarships.map((s) => (
-                    <td key={s.id}>
-                      <button
-                        className="scard-view"
-                        onClick={() => navigate(`/scholarships/${s.id}`)}
-                      >
-                        View details →
-                      </button>
-                    </td>
-                  ))}
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          {shortcuts.length > 0 && (
-            <>
-              <h3 className="choose-h">Choosing between them</h3>
-              <div className="choose-grid">
-                {shortcuts.map((c) => (
-                  <button
-                    className="choose-card"
-                    key={c.id}
-                    onClick={() => navigate(`/scholarships/${c.id}`)}
-                  >
-                    <span className="choose-when">{c.when}</span>
-                    <span className="choose-then">{c.then}</span>
-                  </button>
-                ))}
-              </div>
-            </>
-          )}
-        </div>
-      </section>
-
-      {/* Majors indexed by subject */}
-      <section>
-        <div className="container section-pad">
-          <p className="eyebrow-red">Courses</p>
-          <h2 className="sec-title">Study by subject</h2>
-          <div className="subject-grid">
-            {subjects.map(([subject, offered]) => (
-              <div className="subject-row" key={subject}>
-                <div className="subject-name">{subject}</div>
-                <div className="subject-where">
-                  {offered.map((name) => (
-                    <span className="subject-chip" key={name}>
-                      {name}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-          {scholarships.some((s) => s.majors.some((m) => /\(self-funded\)$/.test(m))) && (
-            <p className="subject-note">
-              Subjects marked self-funded are offered at the same university, but tuition is
-              not covered.
-            </p>
-          )}
-        </div>
-      </section>
-
-      {/* What the award does not pay for */}
-      <section className="section-navy">
-        <div className="container section-pad">
-          <p className="eyebrow-gold">Be prepared</p>
-          <h2 className="sec-title-ondark">What you pay for yourself</h2>
-          <p className="costs-intro">
-            The scholarship covers tuition, in full or in part. These costs stay with you and
-            your family, and knowing them now saves a hard surprise later.
-          </p>
-          <div className="costs-grid">
-            {yourOwnCosts.map((c) => (
-              <div className="cost-item" key={c.item}>
-                <div className="cost-name">{c.item}</div>
-                <div className="cost-note">{c.note}</div>
-              </div>
-            ))}
+          <SectionHeader
+            title="Compare and choose"
+            intro="Put the programmes side by side, or start from the subject you want to study."
+          />
+          <div className="link-card-grid two">
+            <LinkCard
+              to="/scholarships/compare"
+              title="Compare the programmes"
+              text="Tuition, accommodation, the CSCA exam and who can apply, side by side, with a quick guide to choosing."
+            />
+            <LinkCard
+              to="/scholarships/subjects"
+              title="Find a course by subject"
+              text={`All ${subjectCount} subjects, A to Z, and the programmes that offer each one.`}
+            />
           </div>
         </div>
       </section>
 
-      <section className="cta-band light">
-        <div className="cta-inner">
-          <h2 className="cta-title">Ready to study in China?</h2>
-          <p className="cta-p">
-            One application covers whichever programme you choose. It takes about 15 minutes.
-          </p>
-          <button className="btn-cta-red" onClick={() => navigate('/apply')}>
-            Begin Your Application
-          </button>
-        </div>
-      </section>
+      <CtaBand text="One application covers whichever programme you choose. The form takes about 15 minutes." />
     </>
   )
 }

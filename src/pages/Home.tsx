@@ -1,16 +1,18 @@
-import { useNavigate } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
 import { usePageMeta } from "../lib/meta";
-import { statusColor } from "../data/scholarships";
 import { useScholarships } from "../lib/scholarshipStore";
 import { procSteps } from "../data/content";
 import { photos, photoBlurs } from "../data/photos";
 import HeroBackdrop from "../components/HeroBackdrop";
+import Button from "../components/Button";
+import ScholarshipCard from "../components/ScholarshipCard";
+import SectionHeader from "../components/SectionHeader";
+import CtaBand from "../components/CtaBand";
 
 export default function Home() {
-	const navigate = useNavigate();
 	usePageMeta(
-		"StudyInChinaNow | Scholarships in China for African Students",
-		"We help African students win scholarships at accredited Chinese universities, with tuition covered in full or in part. Kampala office, real people.",
+		"Scholarships in China for African Students | StudyInChinaNow",
+		"Apply for scholarships at accredited Chinese universities: Bachelor's, Master's and Chinese language. Tuition covered in full or in part. Office in Kampala, Uganda.",
 	);
 
 	const topScholarships = useScholarships().slice(0, 3);
@@ -29,28 +31,21 @@ export default function Home() {
 					<div className="hero-slash" />
 					<div className="hero-inner">
 						<div className="hero-copy">
-							<p className="hero-eyebrow">
-								Fully-funded scholarships · 2026 intake
-							</p>
-							<h1 className="hero-title">Study in China, fully funded</h1>
+							<h1 className="hero-title">
+								Scholarships in China for African students
+							</h1>
 							<p className="hero-lede">
-								We help African students get scholarships at accredited Chinese
-								universities, with tuition covered in full or in part. You apply
-								once, offline, and we guide you the whole way.
+								Study at an accredited Chinese university with tuition covered in
+								full or in part. Apply online in about 15 minutes, and our Kampala
+								office guides you through admission, visa and travel.
 							</p>
 							<div className="hero-ctas">
-								<button
-									className="btn-hero-red"
-									onClick={() => navigate("/apply")}
-								>
-									Apply Now →
-								</button>
-								<button
-									className="btn-hero-ghost"
-									onClick={() => navigate("/scholarships")}
-								>
-									View Scholarships →
-								</button>
+								<Button to="/apply" size="lg" icon={ArrowRight}>
+									Apply now
+								</Button>
+								<Button to="/scholarships" size="lg" variant="outline-light">
+									See the scholarships
+								</Button>
 							</div>
 						</div>
 					</div>
@@ -61,56 +56,23 @@ export default function Home() {
 			    visitor's first question before the process explains how to get it. */}
 			<section className="home-scholarships">
 				<div className="container section-pad">
-					<div className="navy-head">
-						<div>
-							<p className="eyebrow-gold">2026 intake</p>
-							<h2 className="sec-title">Open scholarships</h2>
-						</div>
-					</div>
-					<div className="sch-cards">
+					<SectionHeader
+						title="Scholarship programmes"
+						aside={
+							<Button to="/scholarships" variant="text" icon={ArrowRight}>
+								See all scholarships
+							</Button>
+						}
+					/>
+					<div className="card-grid">
 						{topScholarships.map((c) => (
-							<div className="sch-card" key={c.id}>
-								<div className="sch-card-top">
-									<span className="scard-status">
-										<span
-											className="scard-dot"
-											style={{ background: statusColor(c.status) }}
-										/>
-										<span
-											className="scard-status-label"
-											style={{ color: statusColor(c.status) }}
-										>
-											{c.status}
-										</span>
-									</span>
-									<span className="sch-card-close">{c.closingLabel}</span>
-								</div>
-								<h3 className="sch-card-title">{c.title}</h3>
-								<div className="sch-card-loc">{c.location}</div>
-								<div className="sch-kv">
-									<span className="sch-kv-k">LEVEL</span>
-									<span className="sch-kv-v">{c.levels}</span>
-								</div>
-								<div className="sch-kv">
-									<span className="sch-kv-k">CLOSES</span>
-									<span className="sch-kv-v">{c.closingKV}</span>
-								</div>
-								<button
-									className="btn-card-red"
-									onClick={() => navigate(`/scholarships/${c.id}`)}
-								>
-									View This Scholarship
-								</button>
-							</div>
+							<ScholarshipCard
+								key={c.id}
+								scholarship={c}
+								compact
+								headingLevel="h3"
+							/>
 						))}
-					</div>
-					<div className="view-all-wrap">
-						<button
-							className="btn-outline-navy"
-							onClick={() => navigate("/scholarships")}
-						>
-							View All Scholarships
-						</button>
 					</div>
 				</div>
 			</section>
@@ -119,21 +81,20 @@ export default function Home() {
 			    on offer, this answers how to get it. */}
 			<section className="section-navy home-process">
 				<div className="container section-pad">
-					<p className="eyebrow-gold">The process</p>
-					<h2 className="sec-title-ondark proc-heading">Four steps to enrollment</h2>
-					<div className="proc-grid">
+					<SectionHeader title="Apply in 4 steps" onDark />
+					<ol className="proc-grid">
 						{procSteps.map((g) => (
-							<div className="proc-cell" key={g.num}>
-								<div className="proc-num">{g.num}</div>
+							<li className="proc-cell" key={g.num}>
+								<span className="proc-num">Step {Number(g.num)}</span>
 								<h3 className="proc-title">{g.title}</h3>
 								<p className="proc-short">{g.short}</p>
-							</div>
+							</li>
 						))}
-					</div>
+					</ol>
 					<div className="howto-cta-row">
-						<button className="btn-red-md" onClick={() => navigate("/apply")}>
-							Apply Now
-						</button>
+						<Button to="/how-to-apply" variant="outline-light">
+							Read the full application guide
+						</Button>
 					</div>
 				</div>
 			</section>
@@ -142,22 +103,7 @@ export default function Home() {
 			    The section markup lives in git history; `alumni` in
 			    src/data/content.ts holds the drafts. */}
 
-			{/* CTA band. Light rather than solid red: with Student Voices hidden the
-			    navy band above would otherwise run straight into red, and red is
-			    reserved for the action itself. Drop the `light` class to restore
-			    the original red band. */}
-			<section className="cta-band light">
-				<div className="cta-inner">
-					<h2 className="cta-title">Ready to study in China?</h2>
-					<p className="cta-p">
-						Applications for the 2026 intake are open. Spots are limited.
-						Submit your details today.
-					</p>
-					<button className="btn-cta-red" onClick={() => navigate("/apply")}>
-						Begin Your Application
-					</button>
-				</div>
-			</section>
+			<CtaBand text="Places on each programme are limited. Submit your application now and the Kampala office calls you within 3 working days." />
 		</div>
 	);
 }

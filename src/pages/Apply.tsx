@@ -1,11 +1,14 @@
 import { useRef, useState } from 'react'
 import type { ChangeEvent } from 'react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
+import { useHydrated } from '../lib/useHydrated'
 import { usePageMeta } from '../lib/meta'
 import { useScholarships } from '../lib/scholarshipStore'
 import { contact, documents } from '../data/content'
 import { photos, photoBlurs } from '../data/photos'
+import { Check } from 'lucide-react'
 import HeroBackdrop from '../components/HeroBackdrop'
+import Button from '../components/Button'
 import {
   MAX_EDUCATION_ROWS,
   MAX_EMPLOYMENT_ROWS,
@@ -45,7 +48,6 @@ const EDU_STEP = formSteps.findIndex((s) => s.label === 'Academic & referees') +
 const STUDY_STEP = formSteps.findIndex((s) => s.label === 'Study choice') + 1
 
 export default function Apply() {
-  const navigate = useNavigate()
   const [params, setParams] = useSearchParams()
   const scholarships = useScholarships()
   /* The saved programmes arrive after the first render, so the choice is held
@@ -77,11 +79,15 @@ export default function Apply() {
 
   const byId = (id: string | null | undefined) =>
     id ? scholarships.find((s) => s.id === id) : undefined
-  const sel = byId(selectedId) ?? byId(params.get('scholarship')) ?? scholarships[0]
+  /* apply.html is prerendered without a ?scholarship= link, so the link is
+     only read once the page is live (see useHydrated). */
+  const hydrated = useHydrated()
+  const fromLink = hydrated ? params.get('scholarship') : null
+  const sel = byId(selectedId) ?? byId(fromLink) ?? scholarships[0]
 
   usePageMeta(
-    'Apply for a Scholarship | StudyInChinaNow',
-    'Apply online for a scholarship in China. We fill in the official Foreign Student Application Form for you from your answers, so there is nothing to print or scan.',
+    'Apply for a Scholarship in China Online | StudyInChinaNow',
+    'Apply online for a Chinese university scholarship in about 15 minutes. Your answers fill in the university’s Foreign Student Application Form, so there is nothing to print.',
   )
 
   /* A programme saved without any study level still has to produce a sensible
@@ -287,7 +293,7 @@ export default function Apply() {
             type={f.type === 'date' ? 'date' : f.type === 'tel' ? 'tel' : f.type === 'email' ? 'email' : 'text'}
             placeholder={f.placeholder}
             list={f.name === 'course' ? 'majors-list' : undefined}
-            max={f.name === 'dob' ? new Date().toISOString().slice(0, 10) : undefined}
+            max={f.name === 'dob' && hydrated ? new Date().toISOString().slice(0, 10) : undefined}
             onChange={(e) => setField(f.name)(e.target.value)}
           />
         )}
@@ -314,7 +320,6 @@ export default function Apply() {
         <HeroBackdrop src={photos.apply} blur={photoBlurs.apply} />
         <div className="page-hero-shade deep" />
         <div className="page-hero-inner apply-pad" style={{ maxWidth: 780 }}>
-          <p className="eyebrow-hero">Application</p>
           <h1 className="page-title no-mb apply-size">Apply for a scholarship</h1>
         </div>
       </section>
@@ -324,7 +329,7 @@ export default function Apply() {
           <div>
             <div className="apply-banner">
               <div className="apply-banner-main">
-                <div className="apply-banner-label">You are applying for</div>
+                <div className="apply-banner-label">Applying for</div>
                 <div className="apply-banner-title">{sel.title}</div>
               </div>
               <label className="apply-banner-change">
@@ -346,11 +351,25 @@ export default function Apply() {
               </label>
             </div>
 
-            {step <= formSteps.length && (
+            {/* Who handles the application and the applicant's details, said
+                before the first personal question. [CONFIRM WITH OFFICE] the
+                data sentence matches how files are actually shared. */}
+            {step === 1 && (
               <div className="official-note">
-                <strong>This is your official Foreign Student Application Form.</strong> We
-                fill it in from these answers, so there is nothing to print or scan. You get
-                a copy when you submit.
+                <strong>StudyInChinaNow is a placement service, not a university.</strong>{' '}
+                Your answers fill in the university’s Foreign Student Application Form,
+                so there is nothing to print or scan, and you get a copy when you submit.
+                Our Kampala office (Enjosh Investments Limited) checks your file and sends it
+                to the university for you. Your details are used only for this application:
+                our admissions team sees them, and they go only to the university and the
+                partners arranging your admission. Our service fee is a fixed amount, and
+                you see it in full before you commit.
+              </div>
+            )}
+            {step > 1 && step <= formSteps.length && (
+              <div className="official-note">
+                <strong>These answers fill in the university’s application form.</strong> Our
+                office checks your file and sends it to the university for you.
               </div>
             )}
 
@@ -382,7 +401,7 @@ export default function Apply() {
                       className="apply-step-dot"
                       style={{ background: dotBg, color: dotFg, borderColor: dotBd }}
                     >
-                      {state === 'done' ? '✓' : n}
+                      {state === 'done' ? <Check size={14} strokeWidth={3} aria-label="Done" /> : n}
                     </span>
                     <span
                       className="apply-step-label"
@@ -525,9 +544,9 @@ export default function Apply() {
                       </div>
                     ))}
                     {education.length < MAX_EDUCATION_ROWS && (
-                      <button className="btn-outline-navy" onClick={addEduRow}>
+                      <Button variant="secondary" onClick={addEduRow}>
                         Add another school
-                      </button>
+                      </Button>
                     )}
                   </div>
                 )}
@@ -605,9 +624,9 @@ export default function Apply() {
                       </div>
                     ))}
                     {employment.length < MAX_EMPLOYMENT_ROWS && (
-                      <button className="btn-outline-navy" onClick={addEmpRow}>
+                      <Button variant="secondary" onClick={addEmpRow}>
                         Add another job
-                      </button>
+                      </Button>
                     )}
                   </div>
                 )}
@@ -647,7 +666,9 @@ export default function Apply() {
                         {done ? (
                           <div className="upload-done-group">
                             <span className="upload-filename">
-                              <span className="upload-tick">✓</span>
+                              <span className="upload-tick">
+                                <Check size={13} strokeWidth={3} aria-hidden="true" />
+                              </span>
                               {uploads[d.key].label}
                             </span>
                             <button
@@ -867,8 +888,9 @@ export default function Apply() {
                   </p>
                 </div>
 
-                <button
-                  className="submit-btn"
+                <Button
+                  variant="navy"
+                  size="lg"
                   disabled={
                     !consent ||
                     !declareHealth ||
@@ -880,7 +902,7 @@ export default function Apply() {
                   onClick={onSubmit}
                 >
                   {submitting ? 'Submitting…' : 'Submit application'}
-                </button>
+                </Button>
                 {submitError && (
                   <p className="form-error" role="alert">
                     {submitError}
@@ -897,27 +919,29 @@ export default function Apply() {
 
             <div className="apply-nav-row">
               {step > 1 ? (
-                <button className="btn-outline-navy" onClick={() => goStep(step - 1)}>
+                <Button variant="secondary" onClick={() => goStep(step - 1)}>
                   Back
-                </button>
+                </Button>
               ) : (
                 <span />
               )}
               {step < TOTAL_STEPS && (
-                <button className="btn-continue" onClick={() => goStep(step + 1)}>
+                <Button onClick={() => goStep(step + 1)}>
                   Continue
-                </button>
+                </Button>
               )}
             </div>
           </div>
         ) : (
           <div className="confirm-wrap">
-            <div className="confirm-tick">✓</div>
+            <div className="confirm-tick">
+              <Check size={34} strokeWidth={2.5} aria-hidden="true" />
+            </div>
             <h1 className="confirm-title">Application received</h1>
             <p className="confirm-p1">
               Thank you. Your application for the {sel.title} has arrived safely, and a member
-              of our team will review it personally. We will call or email you within three
-              working days to confirm the next steps.
+              of our team will review it personally. Expect a call or email within 3 working days
+              to confirm the next steps.
             </p>
             {failedUploads.length > 0 && (
               <div className="confirm-warning" role="alert">
@@ -944,18 +968,18 @@ export default function Apply() {
             </p>
             {formDocUrl && (
               <p className="confirm-download">
-                <a
-                  className="btn-outline-navy"
+                <Button
+                  variant="secondary"
                   href={formDocUrl}
                   download="Application-Form-for-Foreign-Students.pdf"
                 >
                   Download your completed application form
-                </a>
+                </Button>
               </p>
             )}
-            <button className="btn-red-md" onClick={() => navigate('/')}>
+            <Button to="/">
               Back to home
-            </button>
+            </Button>
           </div>
         )}
       </div>
