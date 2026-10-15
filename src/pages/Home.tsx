@@ -25,7 +25,8 @@ export default function Home() {
 					<HeroBackdrop
 						src={photos.home}
 						blur={photoBlurs.home}
-						position="center right"
+						/* Keeps the laughing graduate on the right in frame, down to a phone-width crop. */
+						position="78% center"
 					/>
 					<div className="hero-gradient" />
 					<div className="hero-slash" />
